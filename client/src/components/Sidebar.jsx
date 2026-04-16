@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown } from 'lucide-react';
+import { Menu, X, ChevronDown, Mail } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const navItems = [
@@ -10,7 +10,7 @@ const navItems = [
   { path: '/companies', label: 'Companies' },
   { path: '/resources', label: 'Resources' },
   { path: '/apply', label: 'Apply' },
-  { path: '/contact', label: 'Contact' }
+  { path: '/dashboard', label: 'Dashboard' }
 ];
 
 const moreItems = [
@@ -95,47 +95,6 @@ function Sidebar() {
             </NavLink>
           ))}
 
-          <div className="auth-nav-actions">
-            {!isAuthenticated ? (
-              <>
-                <NavLink
-                  to="/login"
-                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-                  onClick={resetNavbarState}
-                >
-                  Login
-                </NavLink>
-                <NavLink
-                  to="/register"
-                  className={({ isActive }) => `nav-link nav-link-accent ${isActive ? 'active' : ''}`}
-                  onClick={resetNavbarState}
-                >
-                  Register
-                </NavLink>
-              </>
-            ) : (
-              <>
-                <NavLink
-                  to="/dashboard"
-                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-                  onClick={resetNavbarState}
-                >
-                  Dashboard
-                </NavLink>
-                <button
-                  type="button"
-                  className="nav-link"
-                  onClick={() => {
-                    logout();
-                    resetNavbarState();
-                  }}
-                >
-                  Logout
-                </button>
-              </>
-            )}
-          </div>
-
           <div className="more-menu">
             <button
               type="button"
@@ -164,13 +123,91 @@ function Sidebar() {
               ))}
             </div>
           </div>
+
+          <div className="topbar-mobile-actions">
+            <div className="topbar-mobile-row">
+              <NavLink
+                to="/contact"
+                aria-label="Contact page"
+                className={({ isActive }) =>
+                  `contact-corner-link ${isActive ? 'active' : ''}`
+                }
+                onClick={resetNavbarState}
+              >
+                <Mail size={15} />
+              </NavLink>
+              {isAuthenticated && user ? (
+                <div className="topbar-user">
+                  <strong>{user.fullName.split(' ')[0]}</strong>
+                </div>
+              ) : null}
+            </div>
+            {!isAuthenticated ? (
+              <NavLink
+                to="/login"
+                className={({ isActive }) =>
+                  `auth-action-button auth-action-login ${isActive ? 'active' : ''}`
+                }
+                onClick={resetNavbarState}
+              >
+                Login
+              </NavLink>
+            ) : (
+              <button
+                type="button"
+                className="auth-action-button auth-action-logout"
+                onClick={() => {
+                  logout();
+                  resetNavbarState();
+                }}
+              >
+                Logout
+              </button>
+            )}
+          </div>
         </nav>
 
-        {isAuthenticated && user ? (
-          <div className="topbar-user">
-            <strong>{user.fullName.split(' ')[0]}</strong>
-          </div>
-        ) : null}
+        <div className="topbar-right">
+          <NavLink
+            to="/contact"
+            aria-label="Contact page"
+            className={({ isActive }) =>
+              `contact-corner-link ${isActive ? 'active' : ''}`
+            }
+            onClick={resetNavbarState}
+          >
+            <Mail size={15} />
+          </NavLink>
+
+          {isAuthenticated && user ? (
+            <div className="topbar-user">
+              <strong>{user.fullName.split(' ')[0]}</strong>
+            </div>
+          ) : null}
+
+          {!isAuthenticated ? (
+            <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                `auth-action-button auth-action-login ${isActive ? 'active' : ''}`
+              }
+              onClick={resetNavbarState}
+            >
+              Login
+            </NavLink>
+          ) : (
+            <button
+              type="button"
+              className="auth-action-button auth-action-logout"
+              onClick={() => {
+                logout();
+                resetNavbarState();
+              }}
+            >
+              Logout
+            </button>
+          )}
+        </div>
       </header>
     </>
   );
