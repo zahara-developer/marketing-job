@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apiBaseUrl } from '../data/siteContent';
+import { API } from '../data/siteContent';
 
 function useSiteData() {
   const [roles, setRoles] = useState([]);
@@ -13,16 +13,16 @@ function useSiteData() {
     const fetchData = async () => {
       try {
         const results = await Promise.allSettled([
-          fetch(`${apiBaseUrl}/roles`).then((response) =>
+          fetch(`${API}/roles`).then((response) =>
             response.ok ? response.json() : []
           ),
-          fetch(`${apiBaseUrl}/companies`).then((response) =>
+          fetch(`${API}/companies`).then((response) =>
             response.ok ? response.json() : []
           ),
-          fetch(`${apiBaseUrl}/resources`).then((response) =>
+          fetch(`${API}/resources`).then((response) =>
             response.ok ? response.json() : []
           ),
-          fetch(`${apiBaseUrl}/applications`).then((response) =>
+          fetch(`${API}/applications`).then((response) =>
             response.ok ? response.json() : []
           )
         ]);

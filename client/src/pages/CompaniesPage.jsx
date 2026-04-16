@@ -5,6 +5,8 @@ import SectionHeader from '../components/SectionHeader';
 import CompanySpotlight from '../components/CompanySpotlight';
 import { imageSources } from '../assets/images/imageSources';
 
+const API = import.meta.env.VITE_API_URL;
+
 function CompaniesPage() {
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,7 +15,7 @@ function CompaniesPage() {
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const response = await fetch('/api/companies');
+        const response = await fetch(`${API}/companies`);
 
         if (!response.ok) {
           throw new Error('Unable to load companies right now.');
@@ -46,8 +48,8 @@ function CompaniesPage() {
       <section className="content-section">
         <SectionHeader
           eyebrow="Company spotlight"
-          title="A curated look at teams building serious demand and revenue engines."
-          description="These sample employers show the range of environments where early-career and growth-ready talent can thrive."
+          title="We are connected with leading companies hiring marketing and sales talent."
+          description="Explore top companies, recognize their brands, and discover where strong career opportunities can grow."
         />
         {loading ? <p className="status-text">Loading companies...</p> : null}
         {error ? <p className="status-text error-text">{error}</p> : null}

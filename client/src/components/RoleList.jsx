@@ -29,7 +29,7 @@ function RoleList({ roles }) {
           </p>
           <div className="role-card-actions">
             <Link
-              to={`/contact?role=${encodeURIComponent(role.title)}`}
+              to={`/apply?role=${encodeURIComponent(role.title)}`}
               className="primary-button"
             >
               Apply Job

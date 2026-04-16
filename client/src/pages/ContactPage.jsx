@@ -1,52 +1,45 @@
-import { motion } from 'framer-motion';
-import { useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
 import PageHero from '../components/PageHero';
 import SectionHeader from '../components/SectionHeader';
-import ContactForm from '../components/ContactForm';
 import { imageSources } from '../assets/images/imageSources';
-import { apiBaseUrl } from '../data/siteContent';
-import useSiteData from '../hooks/useSiteData';
 
 function ContactPage() {
-  const location = useLocation();
-  const { roles } = useSiteData();
-  const selectedRole = useMemo(() => {
-    const params = new URLSearchParams(location.search);
-    return params.get('role') || '';
-  }, [location.search]);
-
   return (
     <>
       <PageHero
-        eyebrow="Contact and apply"
-        title="Tell us which role fits your strengths and where you want to grow next."
-        description="Submit your details to express interest in opportunities across marketing, growth, and sales teams."
+        eyebrow="Contact"
+        title="Reach out if you want help, guidance, or support."
+        description="Use this page to contact the team for questions about roles, guidance, or next steps."
         image={imageSources.contact}
-        imageAlt="Recruiters and candidates discussing career opportunities"
+        imageAlt="Professional contact and support"
       />
 
       <section className="content-section">
         <SectionHeader
-          eyebrow="Application form"
-          title="Ready to step into a growth-focused career path?"
-          description="Use the form below to apply, express interest, or start a conversation with the hiring team."
+          eyebrow="Get in touch"
+          title="Contact the team directly"
+          description="If you need support, want to ask a question, or need direction, use the details below."
         />
-        <div className="contact-layout">
-          <motion.div
-            className="contact-image-panel"
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.25 }}
-            transition={{ duration: 0.7 }}
-          >
-            <img src={imageSources.hero} alt="Career consultation and hiring support" />
-            <div className="contact-panel-copy">
-              <h3>Make your next move visible.</h3>
-              <p>Share your role preference, experience level, and goals so the application reaches the right team.</p>
+        <div className="auth-shell">
+          <div className="contact-form">
+            <div className="candidate-card-grid">
+              <div>
+                <label>Email</label>
+                <span>contact@marketingsalesstudio.com</span>
+              </div>
+              <div>
+                <label>Phone</label>
+                <span>+91 9876543210</span>
+              </div>
+              <div>
+                <label>Location</label>
+                <span>Bengaluru, India</span>
+              </div>
+              <div>
+                <label>Support</label>
+                <span>Career guidance, role questions, and hiring support</span>
+              </div>
             </div>
-          </motion.div>
-          <ContactForm roles={roles} apiBaseUrl={apiBaseUrl} selectedRole={selectedRole} />
+          </div>
         </div>
       </section>
     </>

@@ -9,6 +9,7 @@ const navItems = [
   { path: '/roles', label: 'Roles' },
   { path: '/companies', label: 'Companies' },
   { path: '/resources', label: 'Resources' },
+  { path: '/apply', label: 'Apply' },
   { path: '/contact', label: 'Contact' }
 ];
 

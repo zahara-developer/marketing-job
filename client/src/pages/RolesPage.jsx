@@ -4,6 +4,8 @@ import SectionHeader from '../components/SectionHeader';
 import RoleList from '../components/RoleList';
 import { imageSources } from '../assets/images/imageSources';
 
+const API = import.meta.env.VITE_API_URL;
+
 function RolesPage() {
   const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,7 +14,7 @@ function RolesPage() {
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const response = await fetch('/api/roles');
+        const response = await fetch(`${API}/roles`);
 
         if (!response.ok) {
           throw new Error('Unable to load roles right now.');
@@ -46,7 +48,7 @@ function RolesPage() {
         <SectionHeader
           eyebrow="Role directory"
           title="A focused view of the core opportunities in marketing and sales."
-          description="These seeded roles are ready from the backend and can grow into a full careers catalog later."
+          description="Browse role paths that can help you understand where your strengths fit best."
         />
         {loading ? <p className="status-text">Loading roles...</p> : null}
         {error ? <p className="status-text error-text">{error}</p> : null}

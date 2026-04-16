@@ -6,6 +6,7 @@ import RolesPage from './pages/RolesPage';
 import CompaniesPage from './pages/CompaniesPage';
 import ResourcesPage from './pages/ResourcesPage';
 import ContactPage from './pages/ContactPage';
+import ApplyPage from './pages/ApplyPage';
 import TestimonialsPage from './pages/TestimonialsPage';
 import BlogPage from './pages/BlogPage';
 import FaqsPage from './pages/FaqsPage';
@@ -24,6 +25,7 @@ function App() {
         <Route path="/roles" element={<RolesPage />} />
         <Route path="/companies" element={<CompaniesPage />} />
         <Route path="/resources" element={<ResourcesPage />} />
+        <Route path="/apply" element={<ApplyPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />

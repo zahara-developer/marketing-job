@@ -4,7 +4,9 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import PageHero from '../components/PageHero';
 import { imageSources } from '../assets/images/imageSources';
 import { useAuth } from '../context/AuthContext';
-import { apiBaseUrl } from '../data/siteContent';
+import { API } from '../data/siteContent';
+
+const googleAuthUrl = import.meta.env.VITE_GOOGLE_AUTH_URL || '';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -71,7 +73,7 @@ function LoginPage() {
     setSubmitting(true);
 
     try {
-      const response = await fetch(`${apiBaseUrl}/auth/forgot-password`, {
+      const response = await fetch(`${API}/auth/forgot-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -97,6 +99,18 @@ function LoginPage() {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleGoogleLogin = () => {
+    if (!googleAuthUrl) {
+      setStatus({
+        type: 'error',
+        text: 'Google login is not configured yet.'
+      });
+      return;
+    }
+
+    window.location.href = googleAuthUrl;
   };
 
   return (
@@ -196,6 +210,20 @@ function LoginPage() {
                   ? 'Reset Password'
                   : 'Login'}
             </button>
+            {!showForgotPassword ? (
+              <>
+                <div className="auth-divider">
+                  <span>or</span>
+                </div>
+                <button
+                  type="button"
+                  className="secondary-button auth-google-button"
+                  onClick={handleGoogleLogin}
+                >
+                  Continue with Google
+                </button>
+              </>
+            ) : null}
             {status.text ? <p className={`form-status ${status.type}`}>{status.text}</p> : null}
             <button
               type="button"

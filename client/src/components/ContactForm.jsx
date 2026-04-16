@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
+import { API } from '../data/siteContent';
 
 const initialState = {
   fullName: '',
@@ -11,7 +12,7 @@ const initialState = {
   message: ''
 };
 
-function ContactForm({ roles, apiBaseUrl, selectedRole = '' }) {
+function ContactForm({ roles, selectedRole = '' }) {
   const { user, token } = useAuth();
   const [formData, setFormData] = useState(() => ({
     ...initialState,
@@ -57,7 +58,7 @@ function ContactForm({ roles, apiBaseUrl, selectedRole = '' }) {
     setSubmitting(true);
 
     try {
-      const response = await fetch(`${apiBaseUrl}/applications`, {
+      const response = await fetch(`${API}/applications`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

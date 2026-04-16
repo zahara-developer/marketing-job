@@ -23,7 +23,7 @@ function ResourcesPage() {
         <SectionHeader
           eyebrow="Resource picks"
           title="Learn in a way that makes your portfolio and interviews stronger."
-          description="Every resource below is loaded from the backend so the page feels immediately alive after seeding."
+          description="Explore practical reading and learning picks that help you grow with more clarity and confidence."
         />
         {loading ? <p className="status-text">Loading resources...</p> : null}
         {error ? <p className="status-text error-text">{error}</p> : null}

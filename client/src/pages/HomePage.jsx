@@ -247,7 +247,7 @@ function HomePage() {
         <SectionHeader
           eyebrow="Platform Snapshot"
           title="Quick totals only"
-          description="This section now shows counts instead of full candidate details."
+          description="A simple overview of activity across the platform."
         />
         {loading ? <p className="status-text">Loading summary...</p> : null}
         {!loading && error ? <p className="status-text error-text">{error}</p> : null}

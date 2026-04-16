@@ -5,7 +5,7 @@ import {
   useMemo,
   useState
 } from 'react';
-import { apiBaseUrl } from '../data/siteContent';
+import { API } from '../data/siteContent';
 
 const AuthContext = createContext(null);
 const storageKey = 'marketing-sales-auth-token';
@@ -30,7 +30,7 @@ function AuthProvider({ children }) {
     setAuthLoading(true);
 
     try {
-      const response = await fetch(`${apiBaseUrl}/auth/me`, {
+      const response = await fetch(`${API}/auth/me`, {
         headers: {
           Authorization: `Bearer ${authToken}`
         }
@@ -61,7 +61,7 @@ function AuthProvider({ children }) {
   }, [token]);
 
   const authenticate = async (endpoint, payload) => {
-    const response = await fetch(`${apiBaseUrl}/auth/${endpoint}`, {
+    const response = await fetch(`${API}/auth/${endpoint}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

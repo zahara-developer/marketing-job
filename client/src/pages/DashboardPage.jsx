@@ -31,7 +31,7 @@ function DashboardPage() {
         <SectionHeader
           eyebrow="Dashboard"
           title="Your account snapshot"
-          description="These numbers are loaded from the backend after login."
+          description="A quick look at your account activity in one place."
         />
         <motion.div
           className="dashboard-card"
