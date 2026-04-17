@@ -1,15 +1,52 @@
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import PageHero from '../components/PageHero';
 import SectionHeader from '../components/SectionHeader';
 import { imageSources } from '../assets/images/imageSources';
 import { useAuth } from '../context/AuthContext';
+import { API } from '../data/siteContent';
 
 function DashboardPage() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
+  const [totalLoginActivity, setTotalLoginActivity] = useState(0);
+
+  useEffect(() => {
+    const fetchDashboardStats = async () => {
+      if (!token) {
+        setTotalLoginActivity(0);
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API}/auth/stats`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.message || 'Unable to load dashboard stats.');
+        }
+
+        setTotalLoginActivity(result.stats?.totalLoginActivity ?? 0);
+      } catch (_error) {
+        setTotalLoginActivity(0);
+      }
+    };
+
+    fetchDashboardStats();
+  }, [token]);
+
   const stats = [
     {
-      label: 'Total Logins',
+      label: 'User Sign-ins',
       value: user?.loginCount ?? 0
+    },
+    {
+      label: 'Login Activity',
+      value: totalLoginActivity
     },
     {
       label: 'Jobs Applied',

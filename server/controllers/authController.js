@@ -120,6 +120,33 @@ export const getCurrentUser = async (req, res) => {
   });
 };
 
+export const getDashboardStats = async (req, res) => {
+  try {
+    const [aggregateResult, totalUsers] = await Promise.all([
+      User.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalLoginActivity: { $sum: { $ifNull: ['$loginCount', 0] } }
+          }
+        }
+      ]),
+      User.countDocuments()
+    ]);
+
+    const totalLoginActivity = aggregateResult[0]?.totalLoginActivity || 0;
+
+    return res.status(200).json({
+      stats: {
+        totalLoginActivity,
+        totalUsers
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Unable to load dashboard stats right now.' });
+  }
+};
+
 export const forgotPassword = async (req, res) => {
   try {
     if (!process.env.MONGODB_URI) {

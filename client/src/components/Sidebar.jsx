@@ -9,7 +9,6 @@ const navItems = [
   { path: '/roles', label: 'Roles' },
   { path: '/companies', label: 'Companies' },
   { path: '/resources', label: 'Resources' },
-  { path: '/apply', label: 'Apply' },
   { path: '/dashboard', label: 'Dashboard' }
 ];
 
@@ -74,74 +73,129 @@ function Sidebar() {
       </button>
 
       <header className={`topbar ${showTopbar ? '' : 'topbar-hidden'}`}>
-        <div className="topbar-brand">
-          <span className="brand-mark">MS</span>
-          <div className="brand-copy">
-            <p>Marketing & Sales</p>
-            <span>Career Studio</span>
-          </div>
-        </div>
-
-        <nav className={`topbar-nav ${mobileOpen ? 'topbar-nav-open' : ''}`} aria-label="Primary navigation">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              end={item.path === '/'}
-              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-              onClick={resetNavbarState}
-            >
-              {item.label}
-            </NavLink>
-          ))}
-
-          <div className="more-menu">
-            <button
-              type="button"
-              className={`nav-link nav-link-expand ${
-                moreItems.some((item) => item.path === location.pathname) ? 'active' : ''
-              }`}
-              onClick={() => setMoreOpen((prev) => !prev)}
-            >
-              More
-              <ChevronDown
-                size={16}
-                className={`chevron ${moreOpen ? 'chevron-open' : ''}`}
-              />
-            </button>
-
-            <div className={`submenu ${moreOpen ? 'submenu-open' : ''}`}>
-              {moreItems.map((item) => (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  className={({ isActive }) => `submenu-link ${isActive ? 'active' : ''}`}
-                  onClick={resetNavbarState}
-                >
-                  {item.label}
-                </NavLink>
-              ))}
+        <div className="topbar-inner">
+          <div className="topbar-brand">
+            <span className="brand-mark">MS</span>
+            <div className="brand-copy">
+              <p>Marketing & Sales</p>
+              <span>Career Studio</span>
             </div>
           </div>
 
-          <div className="topbar-mobile-actions">
-            <div className="topbar-mobile-row">
+          <nav className={`topbar-nav ${mobileOpen ? 'topbar-nav-open' : ''}`} aria-label="Primary navigation">
+            {navItems.map((item) => (
               <NavLink
-                to="/contact"
-                aria-label="Contact page"
-                className={({ isActive }) =>
-                  `contact-corner-link ${isActive ? 'active' : ''}`
-                }
+                key={item.path}
+                to={item.path}
+                end={item.path === '/'}
+                className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
                 onClick={resetNavbarState}
               >
-                <Mail size={15} />
+                {item.label}
               </NavLink>
-              {isAuthenticated && user ? (
-                <div className="topbar-user">
-                  <strong>{user.fullName.split(' ')[0]}</strong>
-                </div>
-              ) : null}
+            ))}
+
+            <div className="more-menu">
+              <button
+                type="button"
+                className={`nav-link nav-link-expand ${
+                  moreItems.some((item) => item.path === location.pathname) ? 'active' : ''
+                }`}
+                onClick={() => setMoreOpen((prev) => !prev)}
+              >
+                More
+                <ChevronDown
+                  size={16}
+                  className={`chevron ${moreOpen ? 'chevron-open' : ''}`}
+                />
+              </button>
+
+              <div className={`submenu ${moreOpen ? 'submenu-open' : ''}`}>
+                {moreItems.map((item) => (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    className={({ isActive }) => `submenu-link ${isActive ? 'active' : ''}`}
+                    onClick={resetNavbarState}
+                  >
+                    {item.label}
+                  </NavLink>
+                ))}
+              </div>
             </div>
+
+            <div className="topbar-mobile-actions">
+              <div className="topbar-mobile-row">
+                <NavLink
+                  to="/contact"
+                  aria-label="Contact page"
+                  className={({ isActive }) =>
+                    `contact-corner-link ${isActive ? 'active' : ''}`
+                  }
+                  onClick={resetNavbarState}
+                >
+                  <Mail size={15} />
+                </NavLink>
+                {isAuthenticated && user ? (
+                  <div className="topbar-user">
+                    <strong>{user.fullName.split(' ')[0]}</strong>
+                  </div>
+                ) : null}
+              </div>
+              <div className="topbar-mobile-actions-row">
+                {!isAuthenticated ? (
+                  <NavLink
+                    to="/login"
+                    className={({ isActive }) =>
+                      `auth-action-button auth-action-login ${isActive ? 'active' : ''}`
+                    }
+                    onClick={resetNavbarState}
+                  >
+                    Login
+                  </NavLink>
+                ) : (
+                  <button
+                    type="button"
+                    className="auth-action-button auth-action-logout"
+                    onClick={() => {
+                      logout();
+                      resetNavbarState();
+                    }}
+                  >
+                    Logout
+                  </button>
+                )}
+                <NavLink
+                  to="/apply"
+                  className={({ isActive }) =>
+                    `apply-action-button ${isActive ? 'active' : ''}`
+                  }
+                  onClick={resetNavbarState}
+                >
+                  Apply
+                </NavLink>
+              </div>
+            </div>
+          </nav>
+
+          <div className="topbar-right">
+            <NavLink
+              to="/contact"
+              aria-label="Contact page"
+              className={({ isActive }) =>
+                `contact-corner-link ${isActive ? 'active' : ''}`
+              }
+              onClick={resetNavbarState}
+            >
+              <Mail size={15} />
+            </NavLink>
+
+            {isAuthenticated && user ? (
+              <div className="topbar-user">
+                <strong>{user.fullName.split(' ')[0]}</strong>
+              </div>
+            ) : null}
+
             {!isAuthenticated ? (
               <NavLink
                 to="/login"
@@ -164,49 +218,17 @@ function Sidebar() {
                 Logout
               </button>
             )}
-          </div>
-        </nav>
 
-        <div className="topbar-right">
-          <NavLink
-            to="/contact"
-            aria-label="Contact page"
-            className={({ isActive }) =>
-              `contact-corner-link ${isActive ? 'active' : ''}`
-            }
-            onClick={resetNavbarState}
-          >
-            <Mail size={15} />
-          </NavLink>
-
-          {isAuthenticated && user ? (
-            <div className="topbar-user">
-              <strong>{user.fullName.split(' ')[0]}</strong>
-            </div>
-          ) : null}
-
-          {!isAuthenticated ? (
             <NavLink
-              to="/login"
+              to="/apply"
               className={({ isActive }) =>
-                `auth-action-button auth-action-login ${isActive ? 'active' : ''}`
+                `apply-action-button ${isActive ? 'active' : ''}`
               }
               onClick={resetNavbarState}
             >
-              Login
+              Apply
             </NavLink>
-          ) : (
-            <button
-              type="button"
-              className="auth-action-button auth-action-logout"
-              onClick={() => {
-                logout();
-                resetNavbarState();
-              }}
-            >
-              Logout
-            </button>
-          )}
+          </div>
         </div>
       </header>
     </>

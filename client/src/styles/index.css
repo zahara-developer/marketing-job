@@ -82,20 +82,27 @@ a {
   top: 0;
   left: 0;
   right: 0;
-  min-height: 70px;
-  padding: 0.85rem 1.5rem;
+  min-height: 68px;
+  padding: 0.7rem 1.2rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1.2rem;
+  justify-content: center;
   background:
-    linear-gradient(180deg, rgba(255, 251, 247, 0.95), rgba(255, 249, 244, 0.92));
+    linear-gradient(180deg, rgba(255, 251, 247, 0.96), rgba(255, 249, 244, 0.94));
   color: var(--text);
   border-bottom: 1px solid rgba(84, 35, 61, 0.08);
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(16px);
   z-index: 30;
-  box-shadow: 0 12px 28px rgba(83, 50, 63, 0.08);
+  box-shadow: 0 10px 24px rgba(83, 50, 63, 0.07);
   transition: transform 0.28s ease, opacity 0.28s ease;
+}
+
+.topbar-inner {
+  width: min(1220px, 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
 }
 
 .topbar-hidden {
@@ -150,15 +157,22 @@ a {
   align-items: center;
   justify-content: center;
   flex: 1;
-  gap: 0.25rem;
+  min-width: 0;
+  gap: 0.4rem;
+  padding: 0.32rem 0.42rem;
+  border: 1px solid rgba(84, 35, 61, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 252, 247, 0.78);
+  margin: 0 0.35rem;
 }
 
 .topbar-right {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.55rem;
-  min-width: fit-content;
+  gap: 0.5rem;
+  min-width: max-content;
+  padding-left: 0.1rem;
 }
 
 .topbar-mobile-actions {
@@ -168,16 +182,22 @@ a {
 .topbar-mobile-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 0.7rem;
+}
+
+.topbar-mobile-actions-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
 }
 
 .contact-corner-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 37px;
-  height: 37px;
+  width: 36px;
+  height: 36px;
   border-radius: 999px;
   border: 1px solid rgba(84, 35, 61, 0.2);
   background: rgba(255, 252, 247, 0.92);
@@ -192,10 +212,33 @@ a {
   box-shadow: 0 12px 24px rgba(67, 26, 41, 0.12);
 }
 
+.apply-action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  border-radius: 999px;
+  padding: 0.54rem 1rem;
+  border: 1px solid rgba(224, 143, 120, 0.42);
+  background: linear-gradient(135deg, rgba(255, 243, 234, 0.96), rgba(255, 231, 219, 0.92));
+  color: #7e2f3e;
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.apply-action-button:hover,
+.apply-action-button.active {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 24px rgba(179, 71, 65, 0.2);
+  background: linear-gradient(135deg, rgba(255, 236, 225, 0.98), rgba(255, 223, 207, 0.94));
+}
+
 .topbar-user {
   display: inline-flex;
   align-items: center;
-  padding: 0.45rem 0.75rem;
+  padding: 0.42rem 0.7rem;
   border-radius: 999px;
   border: 1px solid rgba(84, 35, 61, 0.12);
   background: rgba(255, 252, 247, 0.84);
@@ -207,6 +250,7 @@ a {
   justify-content: center;
   border: 0;
   border-radius: 999px;
+  min-height: 36px;
   padding: 0.52rem 0.95rem;
   cursor: pointer;
   font-size: 0.84rem;
@@ -246,12 +290,14 @@ a {
   border: 0;
   background: transparent;
   color: inherit;
-  text-align: left;
-  padding: 0.55rem 0.8rem;
-  border-radius: 12px;
+  text-align: center;
+  padding: 0.48rem 0.72rem;
+  border-radius: 999px;
   cursor: pointer;
-  transition: background 0.25s ease, transform 0.25s ease, color 0.25s ease;
-  font-size: 0.88rem;
+  transition: background 0.22s ease, transform 0.22s ease, color 0.22s ease, box-shadow 0.22s ease;
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.1;
   white-space: nowrap;
 }
 
@@ -259,9 +305,10 @@ a {
 .submenu-link:hover,
 .nav-link.active,
 .submenu-link.active {
-  background: linear-gradient(135deg, rgba(217, 241, 232, 0.95), rgba(235, 226, 251, 0.72));
-  transform: translateY(-2px);
+  background: linear-gradient(135deg, rgba(217, 241, 232, 0.8), rgba(235, 226, 251, 0.66));
+  transform: translateY(-1px);
   color: var(--text);
+  box-shadow: 0 8px 18px rgba(83, 50, 63, 0.08);
 }
 
 .nav-link-accent {
@@ -271,7 +318,8 @@ a {
 .nav-link-expand {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 0.35rem;
 }
 
 .chevron {
@@ -283,24 +331,35 @@ a {
 }
 
 .submenu {
-  position: static;
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  min-width: 180px;
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease;
-  margin-top: 0.35rem;
-  border-radius: 14px;
-  background: rgba(255, 252, 247, 0.72);
+  margin-top: 0;
+  border-radius: 16px;
+  background: rgba(255, 252, 247, 0.96);
   border: 1px solid rgba(84, 35, 61, 0.08);
+  box-shadow: 0 14px 28px rgba(83, 50, 63, 0.12);
+  z-index: 40;
 }
 
 .submenu-open {
-  max-height: 260px;
+  max-height: 320px;
 }
 
 .submenu-link {
   display: block;
   color: var(--text);
-  font-size: 0.96rem;
+  font-size: 0.88rem;
+  border-radius: 10px;
+  margin: 0.3rem;
+  text-align: left;
+  padding: 0.5rem 0.65rem;
 }
 
 .more-menu {
@@ -1730,7 +1789,7 @@ a {
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1rem;
 }
 
@@ -1892,7 +1951,14 @@ a {
   }
 
   .topbar {
-    padding: 0.95rem 1rem;
+    padding: 0.82rem 0.9rem;
+  }
+
+  .topbar-inner {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 0.75rem;
   }
 
   .topbar-nav {
@@ -1912,6 +1978,7 @@ a {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.28s ease, transform 0.28s ease;
+    border: 1px solid rgba(84, 35, 61, 0.1);
   }
 
   .topbar-nav-open {
@@ -1934,6 +2001,11 @@ a {
 
   .topbar-mobile-actions .auth-action-button {
     width: 100%;
+  }
+
+  .topbar-mobile-actions .apply-action-button,
+  .topbar-mobile-actions-row .auth-action-button {
+    width: 100%;
     text-align: center;
     justify-content: center;
   }
@@ -1944,7 +2016,13 @@ a {
 
   .submenu {
     position: static;
+    transform: none;
+    left: auto;
+    top: auto;
+    width: 100%;
+    min-width: 0;
     margin-top: 0.4rem;
+    box-shadow: none;
   }
 
   .main-content {
