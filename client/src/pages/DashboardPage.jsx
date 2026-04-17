@@ -5,6 +5,7 @@ import SectionHeader from '../components/SectionHeader';
 import { imageSources } from '../assets/images/imageSources';
 import { useAuth } from '../context/AuthContext';
 import { API } from '../data/siteContent';
+import RevealSection from '../components/RevealSection';
 
 function DashboardPage() {
   const { user, token } = useAuth();
@@ -64,7 +65,7 @@ function DashboardPage() {
         imageAlt="Candidate dashboard and profile overview"
       />
 
-      <section className="content-section">
+      <RevealSection className="content-section">
         <SectionHeader
           eyebrow="Dashboard"
           title="Your account snapshot"
@@ -86,7 +87,7 @@ function DashboardPage() {
             ))}
           </div>
         </motion.div>
-      </section>
+      </RevealSection>
     </>
   );
 }

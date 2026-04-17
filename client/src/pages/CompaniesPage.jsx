@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import PageHero from '../components/PageHero';
 import SectionHeader from '../components/SectionHeader';
 import CompanySpotlight from '../components/CompanySpotlight';
+import LoadingSkeletonGrid from '../components/LoadingSkeletonGrid';
+import RevealSection from '../components/RevealSection';
 import { imageSources } from '../assets/images/imageSources';
 
 const API = import.meta.env.VITE_API_URL;
@@ -45,13 +47,13 @@ function CompaniesPage() {
         imageAlt="Presentation and hiring discussions in a bright office"
       />
 
-      <section className="content-section">
+      <RevealSection className="content-section">
         <SectionHeader
           eyebrow="Company spotlight"
           title="We are connected with leading companies hiring marketing and sales talent."
           description="Explore top companies, recognize their brands, and discover where strong career opportunities can grow."
         />
-        {loading ? <p className="status-text">Loading companies...</p> : null}
+        {loading ? <LoadingSkeletonGrid type="company" count={6} /> : null}
         {error ? <p className="status-text error-text">{error}</p> : null}
         {!loading && !error && companies.length ? (
           <CompanySpotlight companies={companies} />
@@ -59,9 +61,9 @@ function CompaniesPage() {
         {!loading && !error && !companies.length ? (
           <p className="status-text">No companies available right now.</p>
         ) : null}
-      </section>
+      </RevealSection>
 
-      <section className="content-section alt-section">
+      <RevealSection className="content-section alt-section" delay={0.04}>
         <div className="single-visual-block">
           <motion.img
             src={imageSources.contact}
@@ -72,7 +74,7 @@ function CompaniesPage() {
             transition={{ duration: 0.65 }}
           />
         </div>
-      </section>
+      </RevealSection>
     </>
   );
 }

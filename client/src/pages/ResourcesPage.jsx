@@ -4,6 +4,7 @@ import ResourceList from '../components/ResourceList';
 import { motion } from 'framer-motion';
 import { imageSources } from '../assets/images/imageSources';
 import { professionalVideos } from '../data/siteContent';
+import RevealSection from '../components/RevealSection';
 import useSiteData from '../hooks/useSiteData';
 
 function ResourcesPage() {
@@ -19,7 +20,7 @@ function ResourcesPage() {
         imageAlt="Digital marketing dashboard displayed on a screen"
       />
 
-      <section className="content-section">
+      <RevealSection className="content-section">
         <SectionHeader
           eyebrow="Resource picks"
           title="Learn in a way that makes your portfolio and interviews stronger."
@@ -28,9 +29,9 @@ function ResourcesPage() {
         {loading ? <p className="status-text">Loading resources...</p> : null}
         {error ? <p className="status-text error-text">{error}</p> : null}
         {!loading && !error ? <ResourceList resources={resources} /> : null}
-      </section>
+      </RevealSection>
 
-      <section className="content-section video-section">
+      <RevealSection className="content-section video-section" delay={0.04}>
         <SectionHeader
           eyebrow="Watch industry insights"
           title="Watch professional talks on marketing and sales careers."
@@ -72,7 +73,7 @@ function ResourcesPage() {
             </motion.article>
           ))}
         </div>
-      </section>
+      </RevealSection>
     </>
   );
 }

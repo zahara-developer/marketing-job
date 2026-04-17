@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import PageHero from '../components/PageHero';
 import SectionHeader from '../components/SectionHeader';
 import RoleList from '../components/RoleList';
+import LoadingSkeletonGrid from '../components/LoadingSkeletonGrid';
+import RevealSection from '../components/RevealSection';
 import { imageSources } from '../assets/images/imageSources';
 
 const API = import.meta.env.VITE_API_URL;
@@ -44,19 +46,19 @@ function RolesPage() {
         imageAlt="Sales and marketing professionals collaborating in a meeting"
       />
 
-      <section className="content-section">
+      <RevealSection className="content-section">
         <SectionHeader
           eyebrow="Role directory"
           title="A focused view of the core opportunities in marketing and sales."
           description="Browse role paths that can help you understand where your strengths fit best."
         />
-        {loading ? <p className="status-text">Loading roles...</p> : null}
+        {loading ? <LoadingSkeletonGrid type="role" count={6} /> : null}
         {error ? <p className="status-text error-text">{error}</p> : null}
         {!loading && !error && roles.length ? <RoleList roles={roles} /> : null}
         {!loading && !error && !roles.length ? (
           <p className="status-text">No roles available right now.</p>
         ) : null}
-      </section>
+      </RevealSection>
     </>
   );
 }

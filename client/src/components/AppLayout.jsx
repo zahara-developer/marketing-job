@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Facebook, Instagram, Linkedin, Twitter, Youtube } from 'lucide-react';
 import Sidebar from './Sidebar';
 import FloatingChatbot from './FloatingChatbot';
@@ -18,14 +19,27 @@ function AppLayout() {
       <main className="main-content">
         <Outlet />
         <footer className="site-footer">
-          <div className="footer-copy">
+          <motion.div
+            className="footer-copy"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.45 }}
+          >
             <p>Marketing & Sales Career Studio</p>
             <span>Designed for aspiring marketers, growth teams, and modern sales professionals.</span>
             <span>Email: contact@marketingsalesstudio.com</span>
             <span>Phone: +91 9876543210</span>
             <span>Location: Bengaluru, India</span>
-          </div>
-          <div className="footer-socials" aria-label="Social media links">
+          </motion.div>
+          <motion.div
+            className="footer-socials"
+            aria-label="Social media links"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.45, delay: 0.08 }}
+          >
             {socialLinks.map((item) => (
               <a
                 key={item.label}
@@ -38,7 +52,7 @@ function AppLayout() {
                 <item.icon size={18} />
               </a>
             ))}
-          </div>
+          </motion.div>
         </footer>
       </main>
       <FloatingChatbot />

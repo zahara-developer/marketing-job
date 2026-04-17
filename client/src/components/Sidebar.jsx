@@ -23,6 +23,7 @@ function Sidebar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const [showTopbar, setShowTopbar] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const { isAuthenticated, logout, user } = useAuth();
 
@@ -36,6 +37,7 @@ function Sidebar() {
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      setIsScrolled(currentScrollY > 12);
 
       if (currentScrollY <= 20) {
         setShowTopbar(true);
@@ -72,7 +74,7 @@ function Sidebar() {
         {mobileOpen ? <X size={22} /> : <Menu size={22} />}
       </button>
 
-      <header className={`topbar ${showTopbar ? '' : 'topbar-hidden'}`}>
+      <header className={`topbar ${showTopbar ? '' : 'topbar-hidden'} ${isScrolled ? 'topbar-scrolled' : ''}`}>
         <div className="topbar-inner">
           <div className="topbar-brand">
             <span className="brand-mark">MS</span>
