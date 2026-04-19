@@ -18,8 +18,22 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const app = express();
 const port = Number(process.env.PORT) || 5000;
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'http://localhost:5173',
+  'http://localhost:5174'
+].filter(Boolean);
 
-app.use(cors());
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`CORS blocked for origin: ${origin}`));
+  },
+  credentials: true
+}));
 app.use(express.json());
 app.use(morgan('dev'));
 
@@ -46,8 +60,22 @@ const startServer = async () => {
   try {
     await connectDB();
 
-    app.listen(port, () => {
+    const server = app.listen(port);
+
+    server.on('listening', () => {
       console.log(`Server running on port ${port}`);
+    });
+
+    server.on('error', (error) => {
+      if (error.code === 'EADDRINUSE') {
+        console.warn(
+          `Port ${port} is already in use. Another backend instance is already running, so this dev process will stay idle.`
+        );
+        return;
+      }
+
+      console.error('Server failed to start.', error);
+      process.exit(1);
     });
   } catch (error) {
     console.error('Server startup failed because MongoDB is unavailable or misconfigured.');

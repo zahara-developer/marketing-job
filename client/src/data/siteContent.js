@@ -7,7 +7,11 @@ import {
   Target
 } from 'lucide-react';
 
-export const API = import.meta.env.VITE_API_URL;
+const apiBase =
+  import.meta.env.VITE_API_URL ||
+  'http://localhost:5000/api';
+
+export const API = apiBase.replace(/\/+$/, '');
 
 export const metrics = [
   { icon: TrendingUp, value: '8', label: 'High-growth paths' },

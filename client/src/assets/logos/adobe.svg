@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" role="img" aria-labelledby="adobeTitle">
+  <title id="adobeTitle">Adobe</title>
+  <rect width="220" height="60" rx="14" fill="none"/>
+  <g transform="translate(18 10)">
+    <path d="M0 40 14 0h9L9 40Z" fill="#ED2224"/>
+    <path d="M37 40 23 0h-9l14 40Z" fill="#ED2224"/>
+    <path d="M14 25h9l5 15H9Z" fill="#ED2224"/>
+  </g>
+  <text x="72" y="39" fill="#ED2224" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">Adobe</text>
+</svg>

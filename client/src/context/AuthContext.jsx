@@ -10,6 +10,36 @@ import { API } from '../data/siteContent';
 const AuthContext = createContext(null);
 const storageKey = 'marketing-sales-auth-token';
 
+const parseJsonSafely = async (response, requestLabel) => {
+  const rawText = await response.text();
+  const trimmedText = rawText.trim();
+
+  console.debug(`[Auth] ${requestLabel} response`, {
+    url: response.url,
+    status: response.status,
+    ok: response.ok,
+    hasBody: Boolean(trimmedText),
+    contentType: response.headers.get('content-type') || ''
+  });
+
+  if (!trimmedText) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(trimmedText);
+  } catch (error) {
+    console.error(`[Auth] ${requestLabel} returned invalid JSON`, {
+      url: response.url,
+      status: response.status,
+      bodyPreview: trimmedText.slice(0, 240),
+      error
+    });
+
+    throw new Error('The server returned an invalid response. Please try again.');
+  }
+};
+
 function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem(storageKey) || '');
   const [user, setUser] = useState(null);
@@ -36,7 +66,7 @@ function AuthProvider({ children }) {
         }
       });
 
-      const result = await response.json();
+      const result = await parseJsonSafely(response, 'fetchCurrentUser');
 
       if (!response.ok) {
         throw new Error(result.message || 'Unable to load your account.');
@@ -61,24 +91,48 @@ function AuthProvider({ children }) {
   }, [token]);
 
   const authenticate = async (endpoint, payload) => {
-    const response = await fetch(`${API}/auth/${endpoint}`, {
+    const requestUrl = `${API}/auth/${endpoint}`;
+
+    console.debug('[Auth] authenticate request', {
+      endpoint,
+      url: requestUrl,
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
+      hasEmail: Boolean(payload?.email),
+      hasPassword: Boolean(payload?.password)
     });
 
-    const result = await response.json();
+    try {
+      const response = await fetch(requestUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
 
-    if (!response.ok) {
-      throw new Error(result.message || 'Authentication failed.');
+      const result = await parseJsonSafely(response, `authenticate:${endpoint}`);
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Authentication failed.');
+      }
+
+      localStorage.setItem(storageKey, result.token);
+      setToken(result.token);
+      const currentUser = await fetchCurrentUser(result.token);
+      return currentUser || result.user;
+    } catch (error) {
+      if (error instanceof TypeError) {
+        console.error('[Auth] network error', {
+          endpoint,
+          url: requestUrl,
+          error
+        });
+
+        throw new Error('Unable to reach the server. Please check that the backend is running on http://localhost:5000.');
+      }
+
+      throw error;
     }
-
-    localStorage.setItem(storageKey, result.token);
-    setToken(result.token);
-    const currentUser = await fetchCurrentUser(result.token);
-    return currentUser || result.user;
   };
 
   const register = (payload) => authenticate('register', payload);

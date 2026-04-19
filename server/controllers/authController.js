@@ -77,7 +77,7 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    const { email, password } = req.body;
+    const { email, password } = req.body || {};
 
     if (!email?.trim() || !password?.trim()) {
       return res.status(400).json({ message: 'Email and password are required.' });
@@ -105,6 +105,7 @@ export const loginUser = async (req, res) => {
       user: sanitizeUser(user)
     });
   } catch (error) {
+    console.error('loginUser error:', error);
     return res.status(500).json({ message: 'Unable to log in right now.' });
   }
 };

@@ -8,6 +8,36 @@ import { API } from '../data/siteContent';
 
 const googleAuthUrl = import.meta.env.VITE_GOOGLE_AUTH_URL || '';
 
+const parseJsonSafely = async (response, requestLabel) => {
+  const rawText = await response.text();
+  const trimmedText = rawText.trim();
+
+  console.debug(`[LoginPage] ${requestLabel} response`, {
+    url: response.url,
+    status: response.status,
+    ok: response.ok,
+    hasBody: Boolean(trimmedText),
+    contentType: response.headers.get('content-type') || ''
+  });
+
+  if (!trimmedText) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(trimmedText);
+  } catch (error) {
+    console.error(`[LoginPage] ${requestLabel} invalid JSON`, {
+      url: response.url,
+      status: response.status,
+      bodyPreview: trimmedText.slice(0, 240),
+      error
+    });
+
+    throw new Error('The server returned an invalid response. Please try again.');
+  }
+};
+
 function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -73,6 +103,13 @@ function LoginPage() {
     setSubmitting(true);
 
     try {
+      console.debug('[LoginPage] forgot-password request', {
+        url: `${API}/auth/forgot-password`,
+        method: 'POST',
+        hasEmail: Boolean(resetData.email),
+        hasNewPassword: Boolean(resetData.newPassword)
+      });
+
       const response = await fetch(`${API}/auth/forgot-password`, {
         method: 'POST',
         headers: {
@@ -84,7 +121,7 @@ function LoginPage() {
         })
       });
 
-      const result = await response.json();
+      const result = await parseJsonSafely(response, 'forgot-password');
 
       if (!response.ok) {
         throw new Error(result.message || 'Unable to reset password.');

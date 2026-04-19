@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, Mail } from 'lucide-react';
+import { Menu, X, Mail, UserPlus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-const navItems = [
+const authNavItems = [
   { path: '/', label: 'Home' },
   { path: '/about', label: 'About' },
   { path: '/roles', label: 'Roles' },
@@ -12,16 +12,8 @@ const navItems = [
   { path: '/dashboard', label: 'Dashboard' }
 ];
 
-const moreItems = [
-  { path: '/testimonials', label: 'Testimonials' },
-  { path: '/blog', label: 'Blog' },
-  { path: '/faqs', label: 'FAQs' },
-  { path: '/career-tips', label: 'Careers Tips' }
-];
-
 function Sidebar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [moreOpen, setMoreOpen] = useState(false);
   const [showTopbar, setShowTopbar] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
@@ -29,7 +21,6 @@ function Sidebar() {
 
   useEffect(() => {
     setMobileOpen(false);
-    setMoreOpen(false);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -45,7 +36,6 @@ function Sidebar() {
         setShowTopbar(true);
       } else if (currentScrollY > lastScrollY) {
         setShowTopbar(false);
-        setMoreOpen(false);
       }
 
       lastScrollY = currentScrollY;
@@ -60,7 +50,6 @@ function Sidebar() {
 
   const resetNavbarState = () => {
     setMobileOpen(false);
-    setMoreOpen(false);
   };
 
   return (
@@ -76,86 +65,47 @@ function Sidebar() {
 
       <header className={`topbar ${showTopbar ? '' : 'topbar-hidden'} ${isScrolled ? 'topbar-scrolled' : ''}`}>
         <div className="topbar-inner">
-          <div className="topbar-brand">
+          <NavLink to="/" className="topbar-brand" onClick={resetNavbarState}>
             <span className="brand-mark">MS</span>
             <div className="brand-copy">
               <p>Marketing & Sales</p>
               <span>Career Studio</span>
             </div>
-          </div>
+          </NavLink>
 
-          <nav className={`topbar-nav ${mobileOpen ? 'topbar-nav-open' : ''}`} aria-label="Primary navigation">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                end={item.path === '/'}
-                className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-                onClick={resetNavbarState}
-              >
-                {item.label}
-              </NavLink>
-            ))}
-
-            <div className="more-menu">
-              <button
-                type="button"
-                className={`nav-link nav-link-expand ${
-                  moreItems.some((item) => item.path === location.pathname) ? 'active' : ''
-                }`}
-                onClick={() => setMoreOpen((prev) => !prev)}
-              >
-                More
-                <ChevronDown
-                  size={16}
-                  className={`chevron ${moreOpen ? 'chevron-open' : ''}`}
-                />
-              </button>
-
-              <div className={`submenu ${moreOpen ? 'submenu-open' : ''}`}>
-                {moreItems.map((item) => (
-                  <NavLink
-                    key={item.path}
-                    to={item.path}
-                    className={({ isActive }) => `submenu-link ${isActive ? 'active' : ''}`}
-                    onClick={resetNavbarState}
-                  >
-                    {item.label}
-                  </NavLink>
-                ))}
-              </div>
-            </div>
-
-            <div className="topbar-mobile-actions">
-              <div className="topbar-mobile-row">
+          {isAuthenticated ? (
+            <nav className={`topbar-nav ${mobileOpen ? 'topbar-nav-open' : ''}`} aria-label="Primary navigation">
+              {authNavItems.map((item) => (
                 <NavLink
-                  to="/contact"
-                  aria-label="Contact page"
-                  className={({ isActive }) =>
-                    `contact-corner-link ${isActive ? 'active' : ''}`
-                  }
+                  key={item.path}
+                  to={item.path}
+                  end={item.path === '/'}
+                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
                   onClick={resetNavbarState}
                 >
-                  <Mail size={15} />
+                  {item.label}
                 </NavLink>
-                {isAuthenticated && user ? (
-                  <div className="topbar-user">
-                    <strong>{user.fullName.split(' ')[0]}</strong>
-                  </div>
-                ) : null}
-              </div>
-              <div className="topbar-mobile-actions-row">
-                {!isAuthenticated ? (
+              ))}
+
+              <div className="topbar-mobile-actions">
+                <div className="topbar-mobile-row">
                   <NavLink
-                    to="/login"
+                    to="/contact"
+                    aria-label="Contact page"
                     className={({ isActive }) =>
-                      `auth-action-button auth-action-login ${isActive ? 'active' : ''}`
+                      `contact-corner-link ${isActive ? 'active' : ''}`
                     }
                     onClick={resetNavbarState}
                   >
-                    Login
+                    <Mail size={15} />
                   </NavLink>
-                ) : (
+                  {user ? (
+                    <div className="topbar-user">
+                      <strong>{user.fullName.split(' ')[0]}</strong>
+                    </div>
+                  ) : null}
+                </div>
+                <div className="topbar-mobile-actions-row">
                   <button
                     type="button"
                     className="auth-action-button auth-action-logout"
@@ -166,70 +116,95 @@ function Sidebar() {
                   >
                     Logout
                   </button>
-                )}
+                </div>
+              </div>
+            </nav>
+          ) : (
+            <div className={`topbar-nav topbar-nav-public ${mobileOpen ? 'topbar-nav-open' : ''}`}>
+              <div className="topbar-mobile-actions topbar-mobile-actions-public">
+                <div className="topbar-mobile-actions-row guest-auth-actions">
+                  <NavLink
+                    to="/login"
+                    className={({ isActive }) =>
+                      `auth-action-button auth-action-login ${isActive ? 'active' : ''}`
+                    }
+                    onClick={resetNavbarState}
+                  >
+                    Login
+                  </NavLink>
+                  <NavLink
+                    to="/register"
+                    className={({ isActive }) =>
+                      `auth-action-button auth-action-register ${isActive ? 'active' : ''}`
+                    }
+                    onClick={resetNavbarState}
+                  >
+                    <span className="btn-icon" aria-hidden="true">
+                      <UserPlus size={14} />
+                    </span>
+                    Create Account
+                  </NavLink>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="topbar-right">
+            {isAuthenticated ? (
+              <>
                 <NavLink
-                  to="/apply"
+                  to="/contact"
+                  aria-label="Contact page"
                   className={({ isActive }) =>
-                    `apply-action-button ${isActive ? 'active' : ''}`
+                    `contact-corner-link ${isActive ? 'active' : ''}`
                   }
                   onClick={resetNavbarState}
                 >
-                  Apply
+                  <Mail size={15} />
                 </NavLink>
-              </div>
-            </div>
-          </nav>
 
-          <div className="topbar-right">
-            <NavLink
-              to="/contact"
-              aria-label="Contact page"
-              className={({ isActive }) =>
-                `contact-corner-link ${isActive ? 'active' : ''}`
-              }
-              onClick={resetNavbarState}
-            >
-              <Mail size={15} />
-            </NavLink>
+                {user ? (
+                  <div className="topbar-user">
+                    <strong>{user.fullName.split(' ')[0]}</strong>
+                  </div>
+                ) : null}
 
-            {isAuthenticated && user ? (
-              <div className="topbar-user">
-                <strong>{user.fullName.split(' ')[0]}</strong>
-              </div>
-            ) : null}
-
-            {!isAuthenticated ? (
-              <NavLink
-                to="/login"
-                className={({ isActive }) =>
-                  `auth-action-button auth-action-login ${isActive ? 'active' : ''}`
-                }
-                onClick={resetNavbarState}
-              >
-                Login
-              </NavLink>
+                <button
+                  type="button"
+                  className="auth-action-button auth-action-logout"
+                  onClick={() => {
+                    logout();
+                    resetNavbarState();
+                  }}
+                >
+                  Logout
+                </button>
+              </>
             ) : (
-              <button
-                type="button"
-                className="auth-action-button auth-action-logout"
-                onClick={() => {
-                  logout();
-                  resetNavbarState();
-                }}
-              >
-                Logout
-              </button>
+              <>
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) =>
+                    `auth-action-button auth-action-login ${isActive ? 'active' : ''}`
+                  }
+                  onClick={resetNavbarState}
+                >
+                  Login
+                </NavLink>
+                <NavLink
+                  to="/register"
+                  className={({ isActive }) =>
+                    `auth-action-button auth-action-register ${isActive ? 'active' : ''}`
+                  }
+                  onClick={resetNavbarState}
+                >
+                  <span className="btn-icon" aria-hidden="true">
+                    <UserPlus size={14} />
+                  </span>
+                  Create Account
+                </NavLink>
+              </>
             )}
-
-            <NavLink
-              to="/apply"
-              className={({ isActive }) =>
-                `apply-action-button ${isActive ? 'active' : ''}`
-              }
-              onClick={resetNavbarState}
-            >
-              Apply
-            </NavLink>
           </div>
         </div>
       </header>

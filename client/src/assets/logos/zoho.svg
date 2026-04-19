@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" role="img" aria-labelledby="zohoTitle">
+  <title id="zohoTitle">Zoho</title>
+  <rect width="240" height="60" rx="14" fill="none"/>
+  <g font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" transform="translate(20 10)">
+    <g transform="rotate(-8 18 18)">
+      <rect width="36" height="28" rx="4" fill="#E42527"/>
+      <text x="10" y="20" fill="#FFFFFF">Z</text>
+    </g>
+    <g transform="translate(38 4) rotate(-3 18 18)">
+      <rect width="36" height="28" rx="4" fill="#F8B91C"/>
+      <text x="8" y="20" fill="#FFFFFF">O</text>
+    </g>
+    <g transform="translate(76 0) rotate(4 18 18)">
+      <rect width="36" height="28" rx="4" fill="#1FA54A"/>
+      <text x="7" y="20" fill="#FFFFFF">H</text>
+    </g>
+    <g transform="translate(114 5) rotate(-5 18 18)">
+      <rect width="36" height="28" rx="4" fill="#1B75BB"/>
+      <text x="7" y="20" fill="#FFFFFF">O</text>
+    </g>
+  </g>
+</svg>

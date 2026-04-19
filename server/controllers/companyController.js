@@ -1,77 +1,89 @@
 import Company from '../models/Company.js';
 
+const companyLogoDomains = {
+  Google: 'google.com',
+  Microsoft: 'microsoft.com',
+  LinkedIn: 'linkedin.com',
+  Amazon: 'amazon.com',
+  HubSpot: 'hubspot.com',
+  Salesforce: 'salesforce.com',
+  Adobe: 'adobe.com',
+  Shopify: 'shopify.com',
+  Zoho: 'zoho.com'
+};
+
 const fallbackCompanies = [
   {
     name: 'Google',
+    logo: 'https://logo.clearbit.com/google.com',
     industry: 'Technology',
     location: 'Mountain View, USA',
-    shortDescription: 'Hiring across digital marketing, growth strategy, product storytelling, and enterprise sales.'
+    shortDescription: 'Hiring across digital marketing, growth strategy, product storytelling, and enterprise sales.',
+    description: 'Hiring across digital marketing, growth strategy, product storytelling, and enterprise sales.'
   },
   {
     name: 'Microsoft',
+    logo: 'https://logo.clearbit.com/microsoft.com',
     industry: 'Cloud and Productivity',
     location: 'Redmond, USA',
-    shortDescription: 'Known for commercial sales, partner development, demand generation, and global brand campaigns.'
+    shortDescription: 'Known for commercial sales, partner development, demand generation, and global brand campaigns.',
+    description: 'Known for commercial sales, partner development, demand generation, and global brand campaigns.'
   },
   {
     name: 'Amazon',
+    logo: 'https://logo.clearbit.com/amazon.com',
     industry: 'E-commerce and Cloud',
     location: 'Seattle, USA',
-    shortDescription: 'Builds large-scale marketing, marketplace growth, account management, and revenue operations teams.'
+    shortDescription: 'Builds large-scale marketing, marketplace growth, account management, and revenue operations teams.',
+    description: 'Builds large-scale marketing, marketplace growth, account management, and revenue operations teams.'
   },
   {
     name: 'HubSpot',
+    logo: 'https://logo.clearbit.com/hubspot.com',
     industry: 'Marketing SaaS',
     location: 'Cambridge, USA',
-    shortDescription: 'A standout employer for inbound marketing, CRM strategy, lifecycle communication, and sales enablement.'
+    shortDescription: 'A standout employer for inbound marketing, CRM strategy, lifecycle communication, and sales enablement.',
+    description: 'A standout employer for inbound marketing, CRM strategy, lifecycle communication, and sales enablement.'
   },
   {
     name: 'Salesforce',
+    logo: 'https://logo.clearbit.com/salesforce.com',
     industry: 'CRM and Enterprise Software',
     location: 'San Francisco, USA',
-    shortDescription: 'Offers strong opportunities in account growth, customer success, demand generation, and solution selling.'
+    shortDescription: 'Offers strong opportunities in account growth, customer success, demand generation, and solution selling.',
+    description: 'Offers strong opportunities in account growth, customer success, demand generation, and solution selling.'
   },
   {
     name: 'Adobe',
+    logo: 'https://logo.clearbit.com/adobe.com',
     industry: 'Creative and Experience Tech',
     location: 'San Jose, USA',
-    shortDescription: 'Blends content, product marketing, creative strategy, and enterprise relationship-building roles.'
+    shortDescription: 'Blends content, product marketing, creative strategy, and enterprise relationship-building roles.',
+    description: 'Blends content, product marketing, creative strategy, and enterprise relationship-building roles.'
   },
   {
-    name: 'Deloitte',
-    industry: 'Consulting',
-    location: 'London, UK',
-    shortDescription: 'Expands brand, consulting sales, B2B marketing, and business development talent across industries.'
-  },
-  {
-    name: 'Accenture',
-    industry: 'Consulting and Transformation',
-    location: 'Dublin, Ireland',
-    shortDescription: 'Supports growth through strategic communications, client acquisition, and industry-focused marketing.'
-  },
-  {
-    name: 'Meta',
-    industry: 'Media and Technology',
-    location: 'Menlo Park, USA',
-    shortDescription: 'Builds advertising partnerships, brand narratives, market insights, and sales strategy roles.'
+    name: 'Shopify',
+    logo: 'https://logo.clearbit.com/shopify.com',
+    industry: 'Commerce Platform',
+    location: 'Ottawa, Canada',
+    shortDescription: 'Known for growth marketing, partner success, merchant education, and revenue-driving commerce roles.',
+    description: 'Known for growth marketing, partner success, merchant education, and revenue-driving commerce roles.'
   },
   {
     name: 'LinkedIn',
+    logo: 'https://logo.clearbit.com/linkedin.com',
     industry: 'Professional Platform',
     location: 'Sunnyvale, USA',
-    shortDescription: 'Well suited for talent solutions sales, brand marketing, content strategy, and B2B campaign work.'
+    shortDescription: 'Well suited for talent solutions sales, brand marketing, content strategy, and B2B campaign work.',
+    description: 'Well suited for talent solutions sales, brand marketing, content strategy, and B2B campaign work.'
   },
   {
-    name: 'Unilever',
-    industry: 'Consumer Brands',
-    location: 'London, UK',
-    shortDescription: 'A strong destination for brand management, category planning, consumer insights, and field growth roles.'
-  },
-  {
-    name: 'Coca-Cola',
-    industry: 'FMCG',
-    location: 'Atlanta, USA',
-    shortDescription: 'Combines iconic brand storytelling with channel marketing, market expansion, and trade sales execution.'
+    name: 'Zoho',
+    logo: 'https://logo.clearbit.com/zoho.com',
+    industry: 'Business Software',
+    location: 'Chennai, India',
+    shortDescription: 'Supports CRM, campaign execution, demand generation, and software-led sales growth roles.',
+    description: 'Supports CRM, campaign execution, demand generation, and software-led sales growth roles.'
   }
 ];
 
@@ -89,9 +101,11 @@ export const getCompanies = async (_req, res) => {
 
     const normalizedCompanies = companies.map((company) => ({
       name: company.name,
+      logo: company.logo || (companyLogoDomains[company.name] ? `https://logo.clearbit.com/${companyLogoDomains[company.name]}` : ''),
       industry: company.industry,
       location: company.location || 'Global',
-      shortDescription: company.shortDescription || company.description || 'Company profile available.'
+      shortDescription: company.shortDescription || company.description || 'Company profile available.',
+      description: company.description || company.shortDescription || 'Company profile available.'
     }));
 
     return res.status(200).json(normalizedCompanies);
