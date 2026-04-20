@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import PageHero from '../components/PageHero';
+import { BriefcaseBusiness, Sparkles } from 'lucide-react';
 import { imageSources } from '../assets/images/imageSources';
+import hireflowLogo from '../assets/logo/hireflow-logo.svg';
 import { useAuth } from '../context/AuthContext';
 import { API } from '../data/siteContent';
 
@@ -151,32 +152,59 @@ function LoginPage() {
   };
 
   return (
-    <>
-      <PageHero
-        eyebrow="Login"
-        title="Pick up your applications and career progress in one place."
-        description="Log in to view your profile, saved details, and account activity."
-        image={imageSources.contact}
-        imageAlt="Professional login and career support"
-      />
+    <section className="content-section auth-page-section">
+      <div className="auth-shell auth-shell-premium">
+        <motion.div
+          className="auth-visual-card"
+          initial={{ opacity: 0, x: -24 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.45 }}
+        >
+          <img
+            src={imageSources.contact}
+            alt="Marketing and sales professionals collaborating"
+            className="auth-visual-image"
+          />
+          <div className="auth-visual-overlay" />
+          <div className="auth-visual-copy">
+            <span className="auth-visual-badge">
+              <Sparkles size={14} />
+              Career access
+            </span>
+            <h2>Find premium marketing and sales opportunities</h2>
+            <p>Stay close to recruiters, roles, and next-step opportunities with one polished login flow.</p>
+            <div className="auth-visual-note">
+              <BriefcaseBusiness size={16} />
+              <span>Marketing &amp; Sales Career Studio</span>
+            </div>
+          </div>
+        </motion.div>
 
-      <section className="content-section">
-        <div className="auth-shell">
-          <motion.form
-            className="auth-card"
-            onSubmit={showForgotPassword ? handleForgotPassword : handleSubmit}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.45 }}
-          >
-            <h2>{showForgotPassword ? 'Forgot Password' : 'Login'}</h2>
+        <motion.form
+          className="auth-card auth-card-premium"
+          onSubmit={showForgotPassword ? handleForgotPassword : handleSubmit}
+          initial={{ opacity: 0, x: 24 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.45 }}
+        >
+          <div className="auth-form-intro">
+            <div className="login-logo">
+              <img src={hireflowLogo} alt="Hireflow logo" className="logo-img" />
+            </div>
+            <span className="hero-kicker auth-form-kicker">
+              {showForgotPassword ? 'Password help' : 'Welcome back'}
+            </span>
+            <h2>{showForgotPassword ? 'Reset your password' : 'Sign in to your account'}</h2>
             <p>
               {showForgotPassword
-                ? 'Reset your password here, then use the same login box to sign back in.'
-                : 'Access your account with the email and password you registered with.'}
+                ? 'Update your password and return to your marketing and sales career dashboard.'
+                : 'Access your marketing and sales career dashboard.'}
             </p>
+          </div>
 
+          <div className="auth-field-stack">
             {showForgotPassword ? (
               <>
                 <label>
@@ -237,31 +265,36 @@ function LoginPage() {
                 </label>
               </>
             )}
+          </div>
 
-            <button type="submit" className="primary-button" disabled={submitting}>
-              {submitting
-                ? showForgotPassword
-                  ? 'Updating password...'
-                  : 'Logging in...'
-                : showForgotPassword
-                  ? 'Reset Password'
-                  : 'Login'}
-            </button>
-            {!showForgotPassword ? (
-              <>
-                <div className="auth-divider">
-                  <span>or</span>
-                </div>
-                <button
-                  type="button"
-                  className="secondary-button auth-google-button"
-                  onClick={handleGoogleLogin}
-                >
-                  Continue with Google
-                </button>
-              </>
-            ) : null}
-            {status.text ? <p className={`form-status ${status.type}`}>{status.text}</p> : null}
+          <button type="submit" className="primary-button auth-submit-button" disabled={submitting}>
+            {submitting
+              ? showForgotPassword
+                ? 'Updating password...'
+                : 'Logging in...'
+              : showForgotPassword
+                ? 'Reset Password'
+                : 'Login'}
+          </button>
+
+          {!showForgotPassword ? (
+            <>
+              <div className="auth-divider">
+                <span>or continue with</span>
+              </div>
+              <button
+                type="button"
+                className="secondary-button auth-google-button"
+                onClick={handleGoogleLogin}
+              >
+                Continue with Google
+              </button>
+            </>
+          ) : null}
+
+          {status.text ? <p className={`form-status ${status.type}`}>{status.text}</p> : null}
+
+          <div className="auth-footer-row">
             <button
               type="button"
               className="auth-inline-button"
@@ -275,10 +308,10 @@ function LoginPage() {
             <p className="auth-link-copy">
               New here? <Link to="/register">Create an account</Link>
             </p>
-          </motion.form>
-        </div>
-      </section>
-    </>
+          </div>
+        </motion.form>
+      </div>
+    </section>
   );
 }
 

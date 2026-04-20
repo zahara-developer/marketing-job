@@ -1,0 +1,57 @@
+<svg width="620" height="220" viewBox="0 0 620 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="wordGradient" x1="120" y1="88" x2="470" y2="126" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9C5E3B"/>
+      <stop offset="0.42" stop-color="#FF9B6A"/>
+      <stop offset="0.72" stop-color="#F27BA2"/>
+      <stop offset="1" stop-color="#B173D4"/>
+    </linearGradient>
+    <linearGradient id="swooshGradient" x1="364" y1="90" x2="545" y2="66" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFB05D"/>
+      <stop offset="0.55" stop-color="#F38A8F"/>
+      <stop offset="1" stop-color="#B173D4"/>
+    </linearGradient>
+    <filter id="softGlow" x="0" y="0" width="620" height="220" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feBlend in="SourceGraphic" in2="blur" mode="normal"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#softGlow)">
+    <text
+      x="82"
+      y="116"
+      fill="url(#wordGradient)"
+      font-family="Poppins, Arial, Helvetica, sans-serif"
+      font-size="92"
+      font-style="italic"
+      font-weight="800"
+      letter-spacing="-3"
+    >
+      Hireflow
+    </text>
+
+    <path
+      d="M404 95C441 67 489 52 545 49C503 56 466 71 434 94C463 90 490 86 530 89C488 92 453 100 420 115"
+      stroke="url(#swooshGradient)"
+      stroke-width="8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <circle cx="494" cy="58" r="4" fill="#FFA465"/>
+    <circle cx="512" cy="56" r="8" fill="#F16E93"/>
+    <circle cx="538" cy="46" r="6" fill="#A971CF"/>
+
+    <text
+      x="108"
+      y="176"
+      fill="#9A9A9A"
+      font-family="Poppins, Arial, Helvetica, sans-serif"
+      font-size="36"
+      font-weight="400"
+      letter-spacing="0.2"
+    >
+      Discover. Connect. Get Hired.
+    </text>
+  </g>
+</svg>

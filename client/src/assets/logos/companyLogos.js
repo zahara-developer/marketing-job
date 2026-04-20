@@ -7,6 +7,12 @@ import hubspotLogo from './hubspot.svg';
 import shopifyLogo from './shopify.svg';
 import zohoLogo from './zoho.svg';
 import linkedinLogo from './linkedin.svg';
+import oracleLogo from './oracle.svg';
+import metaLogo from './meta.svg';
+import ibmLogo from './ibm.svg';
+import tcsLogo from './tcs.svg';
+import infosysLogo from './infosys.svg';
+import accentureLogo from './accenture.svg';
 
 export const companyLogoMap = {
   Google: googleLogo,
@@ -17,7 +23,13 @@ export const companyLogoMap = {
   HubSpot: hubspotLogo,
   Shopify: shopifyLogo,
   Zoho: zohoLogo,
-  LinkedIn: linkedinLogo
+  LinkedIn: linkedinLogo,
+  Oracle: oracleLogo,
+  Meta: metaLogo,
+  IBM: ibmLogo,
+  TCS: tcsLogo,
+  Infosys: infosysLogo,
+  Accenture: accentureLogo
 };
 
 export const homepageLogoStrip = [

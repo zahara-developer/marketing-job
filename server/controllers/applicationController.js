@@ -38,11 +38,23 @@ export const getApplications = async (_req, res) => {
 
     const applications = await Application.find()
       .sort({ createdAt: -1 })
-      .select('fullName email phone roleInterested experienceLevel message');
+      .select('fullName email phone roleInterested experienceLevel message status createdAt');
 
     return res.status(200).json(applications);
   } catch (error) {
     return res.status(200).json(fallbackApplications);
+  }
+};
+
+export const getMyApplications = async (req, res) => {
+  try {
+    const applications = await Application.find({ appliedBy: req.user._id })
+      .sort({ createdAt: -1 })
+      .select('fullName roleInterested experienceLevel message status createdAt');
+
+    return res.status(200).json(applications);
+  } catch (error) {
+    return res.status(500).json({ message: 'Unable to load your applications right now.' });
   }
 };
 
@@ -99,6 +111,7 @@ export const createApplication = async (req, res) => {
       roleInterested: roleInterested.trim(),
       experienceLevel: experienceLevel.trim(),
       message: message.trim(),
+      status: 'applied',
       appliedBy
     });
 

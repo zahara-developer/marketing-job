@@ -1,10 +1,19 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
+import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 import connectDB from '../config/db.js';
 import Role from '../models/Role.js';
 import Company from '../models/Company.js';
 import Resource from '../models/Resource.js';
+import Community from '../models/Community.js';
+import CommunityMember from '../models/CommunityMember.js';
+import CommunityPost from '../models/CommunityPost.js';
+import CommunityComment from '../models/CommunityComment.js';
+import CommunityLike from '../models/CommunityLike.js';
+import Connection from '../models/Connection.js';
+import User from '../models/User.js';
+import defaultCommunities from '../data/defaultCommunities.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -91,102 +100,6 @@ const roles = [
     location: 'Bengaluru',
     salaryRange: 'INR 3.5 LPA - INR 6 LPA',
     skills: ['Email Automation', 'Segmentation', 'Lifecycle Marketing']
-  },
-  {
-    title: 'Performance Marketing Specialist',
-    category: 'Performance',
-    description: 'Optimizes paid media campaigns across Meta, Google, and marketplaces for measurable growth.',
-    location: 'Hyderabad',
-    salaryRange: 'INR 5 LPA - INR 9 LPA',
-    skills: ['Paid Media', 'ROAS Optimization', 'Attribution']
-  },
-  {
-    title: 'Market Research Analyst',
-    category: 'Insights',
-    description: 'Studies customer behaviour, competitors, and regional demand patterns to guide business strategy.',
-    location: 'Pune',
-    salaryRange: 'INR 4 LPA - INR 7.5 LPA',
-    skills: ['Research Design', 'Consumer Insights', 'Competitive Analysis']
-  },
-  {
-    title: 'Account Manager',
-    category: 'Client Success',
-    description: 'Manages relationships, renewals, and client growth plans across key accounts.',
-    location: 'Noida',
-    salaryRange: 'INR 4.5 LPA - INR 8 LPA',
-    skills: ['Client Management', 'Upselling', 'Reporting']
-  },
-  {
-    title: 'Growth Marketing Associate',
-    category: 'Growth',
-    description: 'Supports acquisition experiments, funnel analysis, and campaign learning loops.',
-    location: 'Bengaluru',
-    salaryRange: 'INR 4 LPA - INR 7 LPA',
-    skills: ['A/B Testing', 'Funnels', 'Analytics']
-  },
-  {
-    title: 'Media Planning Executive',
-    category: 'Media',
-    description: 'Supports media plans, vendor coordination, and campaign budget tracking.',
-    location: 'Mumbai',
-    salaryRange: 'INR 3.5 LPA - INR 6.5 LPA',
-    skills: ['Media Planning', 'Budgeting', 'Campaign Coordination']
-  },
-  {
-    title: 'Email Marketing Specialist',
-    category: 'Lifecycle',
-    description: 'Builds automated journeys and campaign sends for retention and engagement.',
-    location: 'Chennai',
-    salaryRange: 'INR 3.8 LPA - INR 6.8 LPA',
-    skills: ['Email Campaigns', 'Automation', 'Segmentation']
-  },
-  {
-    title: 'Lead Generation Associate',
-    category: 'Sales',
-    description: 'Builds prospect lists, qualifies outbound targets, and supports pipeline growth.',
-    location: 'Gurgaon',
-    salaryRange: 'INR 2.8 LPA - INR 5 LPA',
-    skills: ['Prospecting', 'CRM', 'Outbound']
-  },
-  {
-    title: 'Retail Sales Officer',
-    category: 'Retail Sales',
-    description: 'Supports retail channels, merchandising execution, and local sales targets.',
-    location: 'Delhi',
-    salaryRange: 'INR 3 LPA - INR 5.5 LPA',
-    skills: ['Retail Sales', 'Merchandising', 'Targets']
-  },
-  {
-    title: 'Content Marketing Associate',
-    category: 'Content',
-    description: 'Creates campaign content, blogs, and landing page support for growth teams.',
-    location: 'Pune',
-    salaryRange: 'INR 3.2 LPA - INR 5.8 LPA',
-    skills: ['Content Writing', 'SEO', 'Campaign Support']
-  },
-  {
-    title: 'Sales Operations Coordinator',
-    category: 'Sales Operations',
-    description: 'Maintains CRM workflows, dashboards, and reporting support for sales teams.',
-    location: 'Hyderabad',
-    salaryRange: 'INR 4 LPA - INR 6.5 LPA',
-    skills: ['CRM Hygiene', 'Reporting', 'Pipeline Support']
-  },
-  {
-    title: 'Influencer Marketing Executive',
-    category: 'Marketing',
-    description: 'Manages creator partnerships, campaign briefs, and performance tracking.',
-    location: 'Mumbai',
-    salaryRange: 'INR 3.5 LPA - INR 6 LPA',
-    skills: ['Creator Outreach', 'Campaigns', 'Negotiation']
-  },
-  {
-    title: 'Regional Business Associate',
-    category: 'Business',
-    description: 'Supports territory growth, partner coordination, and regional activation plans.',
-    location: 'Noida',
-    salaryRange: 'INR 3.8 LPA - INR 6.2 LPA',
-    skills: ['Partnerships', 'Coordination', 'Market Expansion']
   }
 ];
 
@@ -250,18 +163,6 @@ const companies = [
     industry: 'Professional Platform',
     openRoles: 8,
     description: 'Well suited for talent solutions sales, brand marketing, content strategy, and B2B campaign work.'
-  },
-  {
-    name: 'Unilever',
-    industry: 'Consumer Brands',
-    openRoles: 7,
-    description: 'A strong destination for brand management, category planning, consumer insights, and field growth roles.'
-  },
-  {
-    name: 'Coca-Cola',
-    industry: 'FMCG',
-    openRoles: 6,
-    description: 'Combines iconic brand storytelling with channel marketing, market expansion, and trade sales execution.'
   }
 ];
 
@@ -292,6 +193,198 @@ const resources = [
   }
 ];
 
+const communities = defaultCommunities;
+
+const communityUsers = [
+  {
+    fullName: 'Rhea Kapoor',
+    email: 'rhea.kapoor@example.com',
+    roleInterested: 'Growth Marketing Lead',
+    experienceLevel: '5+ years',
+    location: 'Bengaluru',
+    currentCompany: 'GrowthSpark Media',
+    bio: 'Performance marketer focused on paid growth, funnel efficiency, and practical mentoring for early-career marketers.'
+  },
+  {
+    fullName: 'Daniel Brooks',
+    email: 'daniel.brooks@example.com',
+    roleInterested: 'Regional Sales Manager',
+    experienceLevel: '6+ years',
+    location: 'Mumbai',
+    currentCompany: 'Northstar Solutions',
+    bio: 'Sales leader helping teams improve outreach, objection handling, and deal velocity.'
+  },
+  {
+    fullName: 'Aditi Verma',
+    email: 'aditi.verma@example.com',
+    roleInterested: 'Performance Marketing Associate',
+    experienceLevel: '1-2 years',
+    location: 'Delhi',
+    currentCompany: 'AdLift Studio',
+    bio: 'Associate marketer who enjoys translating campaigns into interview-ready project stories.'
+  },
+  {
+    fullName: 'Sneha Kapoor',
+    email: 'sneha.kapoor@example.com',
+    roleInterested: 'Content Strategist',
+    experienceLevel: '3+ years',
+    location: 'Pune',
+    currentCompany: 'Narrative House',
+    bio: 'Content strategist exploring SEO, campaign storytelling, and stronger resume positioning.'
+  },
+  {
+    fullName: 'Rahul Menon',
+    email: 'rahul.menon@example.com',
+    roleInterested: 'Business Development Executive',
+    experienceLevel: '2+ years',
+    location: 'Chennai',
+    currentCompany: 'Vertex Growth Labs',
+    bio: 'Business development professional who enjoys profile building, networking, and pipeline strategy.'
+  },
+  {
+    fullName: 'Maya Singh',
+    email: 'maya.singh@example.com',
+    roleInterested: 'Marketing Analyst',
+    experienceLevel: '3+ years',
+    location: 'Hyderabad',
+    currentCompany: 'Insightly Works',
+    bio: 'Marketing analyst exploring career growth decisions between specialization and cross-functional work.'
+  },
+  {
+    fullName: 'Neha Bhatia',
+    email: 'neha.bhatia@example.com',
+    roleInterested: 'Digital Marketing Specialist',
+    experienceLevel: '4+ years',
+    location: 'Noida',
+    currentCompany: 'ClickBeacon',
+    bio: 'Digital marketing specialist focused on campaign performance, analytics, and interview coaching.'
+  },
+  {
+    fullName: 'Harsh Patel',
+    email: 'harsh.patel@example.com',
+    roleInterested: 'Inside Sales Lead',
+    experienceLevel: '4+ years',
+    location: 'Ahmedabad',
+    currentCompany: 'RevenueRoot',
+    bio: 'Inside sales lead helping teams improve qualification, follow-up quality, and call momentum.'
+  },
+  {
+    fullName: 'Priya Nair',
+    email: 'priya.nair@example.com',
+    roleInterested: 'SEO Analyst',
+    experienceLevel: '2+ years',
+    location: 'Kochi',
+    currentCompany: 'SearchMint',
+    bio: 'SEO analyst who enjoys breaking down career stories into clear, recruiter-friendly interview answers.'
+  },
+  {
+    fullName: 'Karan Sethi',
+    email: 'karan.sethi@example.com',
+    roleInterested: 'Lifecycle Marketing Manager',
+    experienceLevel: '5+ years',
+    location: 'Gurgaon',
+    currentCompany: 'Retention Lab',
+    bio: 'Lifecycle marketer with a focus on conversion storytelling, campaign reporting, and resume impact.'
+  },
+  {
+    fullName: 'Ananya Ghosh',
+    email: 'ananya.ghosh@example.com',
+    roleInterested: 'Talent Branding Specialist',
+    experienceLevel: '3+ years',
+    location: 'Kolkata',
+    currentCompany: 'TalentStory Co.',
+    bio: 'Talent branding specialist helping early-career candidates improve LinkedIn presence and discoverability.'
+  },
+  {
+    fullName: 'Vikram Joshi',
+    email: 'vikram.joshi@example.com',
+    roleInterested: 'Revenue Operations Consultant',
+    experienceLevel: '7+ years',
+    location: 'Bengaluru',
+    currentCompany: 'OpsScale Partners',
+    bio: 'Revenue operations consultant supporting career direction, sales systems, and long-term specialization decisions.'
+  }
+];
+
+const communityPosts = [
+  {
+    communitySlug: 'digital-marketing',
+    title: 'Which metrics matter most in your first performance marketing interview?',
+    content: 'I keep seeing questions around CAC, CTR, CPL, and ROAS. For junior roles, which ones should candidates explain confidently and with examples?',
+    authorEmail: 'rhea.kapoor@example.com'
+  },
+  {
+    communitySlug: 'sales-strategies',
+    title: 'What is your favorite way to handle "send me the details" objections?',
+    content: 'I want to move the conversation forward instead of ending the call too early. Curious how others keep the momentum without sounding pushy.',
+    authorEmail: 'daniel.brooks@example.com'
+  },
+  {
+    communitySlug: 'interview-preparation',
+    title: 'Best way to answer "Tell me about yourself" for fresher candidates',
+    content: 'What structure works best when you have projects, internships, and certifications but not a full-time job yet?',
+    authorEmail: 'aditi.verma@example.com'
+  },
+  {
+    communitySlug: 'resume-tips',
+    title: 'How do you write stronger resume bullets for campaign work?',
+    content: 'I have handled email sends, social posts, and campaign execution. I want to make the impact feel more measurable and recruiter-friendly.',
+    authorEmail: 'sneha.kapoor@example.com'
+  },
+  {
+    communitySlug: 'linkedin-profile-building',
+    title: 'What should a fresher put in the LinkedIn headline?',
+    content: 'Should it be role-based, skill-based, or project-based? I want it to look targeted without feeling too generic.',
+    authorEmail: 'rahul.menon@example.com'
+  },
+  {
+    communitySlug: 'career-growth-marketing-sales',
+    title: 'When is the right time to specialize instead of staying broad?',
+    content: 'I have worked across content, paid ads, and CRM support. I am trying to decide whether to go deeper in one lane or stay broad for now.',
+    authorEmail: 'maya.singh@example.com'
+  }
+];
+
+const communityComments = [
+  {
+    postTitle: 'Which metrics matter most in your first performance marketing interview?',
+    content: 'For fresher and associate interviews, being able to explain how metrics relate to business outcomes usually matters more than memorizing every term.',
+    authorEmail: 'neha.bhatia@example.com'
+  },
+  {
+    postTitle: 'What is your favorite way to handle "send me the details" objections?',
+    content: 'I usually confirm the exact gap first, then send a short follow-up with one clear next step instead of a long brochure dump.',
+    authorEmail: 'harsh.patel@example.com'
+  },
+  {
+    postTitle: 'Best way to answer "Tell me about yourself" for fresher candidates',
+    content: 'A simple past-present-future structure works well: your background, what you have already done, and the role direction you want now.',
+    authorEmail: 'priya.nair@example.com'
+  },
+  {
+    postTitle: 'How do you write stronger resume bullets for campaign work?',
+    content: 'Try writing each point as action + scope + result. Even small outcomes like CTR growth or faster delivery help add credibility.',
+    authorEmail: 'karan.sethi@example.com'
+  },
+  {
+    postTitle: 'What should a fresher put in the LinkedIn headline?',
+    content: 'A good format is target role plus two or three strengths. It feels clearer than a generic "open to work" headline alone.',
+    authorEmail: 'ananya.ghosh@example.com'
+  },
+  {
+    postTitle: 'When is the right time to specialize instead of staying broad?',
+    content: 'If one area keeps pulling stronger interest and better outcomes from your work, that is usually a good signal to explore deeper specialization.',
+    authorEmail: 'vikram.joshi@example.com'
+  }
+];
+
+const sampleConnections = [
+  ['rhea.kapoor@example.com', 'neha.bhatia@example.com'],
+  ['daniel.brooks@example.com', 'harsh.patel@example.com'],
+  ['maya.singh@example.com', 'vikram.joshi@example.com'],
+  ['rahul.menon@example.com', 'ananya.ghosh@example.com']
+];
+
 const seedDatabase = async () => {
   try {
     await connectDB();
@@ -299,16 +392,139 @@ const seedDatabase = async () => {
     await Promise.all([
       Role.deleteMany(),
       Company.deleteMany(),
-      Resource.deleteMany()
+      Resource.deleteMany(),
+      CommunityLike.deleteMany(),
+      Connection.deleteMany(),
+      CommunityMember.deleteMany(),
+      CommunityComment.deleteMany(),
+      CommunityPost.deleteMany(),
+      Community.deleteMany()
     ]);
 
-    await Promise.all([
+    const hashedPassword = await bcrypt.hash('Password123', 10);
+    const seededUsers = [];
+
+    for (const user of communityUsers) {
+      const payload = {
+        fullName: user.fullName,
+        email: user.email.toLowerCase(),
+        password: hashedPassword,
+        roleInterested: user.roleInterested,
+        experienceLevel: user.experienceLevel,
+        location: user.location,
+        currentCompany: user.currentCompany,
+        bio: user.bio
+      };
+
+      const existing = await User.findOne({ email: payload.email });
+
+      if (existing) {
+        Object.assign(existing, payload);
+        await existing.save();
+        seededUsers.push(existing);
+      } else {
+        seededUsers.push(await User.create(payload));
+      }
+    }
+
+    const [insertedRoles, insertedCompanies, insertedResources, insertedCommunities] = await Promise.all([
       Role.insertMany(roles),
       Company.insertMany(companies),
-      Resource.insertMany(resources)
+      Resource.insertMany(resources),
+      Community.insertMany(communities)
     ]);
 
+    const communityBySlug = insertedCommunities.reduce((accumulator, community) => {
+      accumulator[community.slug] = community;
+      return accumulator;
+    }, {});
+
+    const userByEmail = seededUsers.reduce((accumulator, user) => {
+      accumulator[user.email.toLowerCase()] = user;
+      return accumulator;
+    }, {});
+
+    await CommunityMember.insertMany(
+      insertedCommunities.flatMap((community) =>
+        communityUsers.slice(0, 8).map((user) => ({
+          community: community._id,
+          user: userByEmail[user.email.toLowerCase()]._id
+        }))
+      )
+    );
+
+    await Promise.all(
+      insertedCommunities.map(async (community) => {
+        const joinedMembers = await CommunityMember.find({ community: community._id }).select('user');
+        community.memberCount = joinedMembers.length;
+        community.joinedMembers = joinedMembers.map((member) => member.user);
+        await community.save();
+      })
+    );
+
+    const insertedPosts = await CommunityPost.insertMany(
+      communityPosts.map((post) => {
+        const author = userByEmail[post.authorEmail.toLowerCase()];
+
+        return {
+          community: communityBySlug[post.communitySlug]._id,
+          author: author._id,
+          authorName: author.fullName,
+          authorRole: author.roleInterested,
+          title: post.title,
+          content: post.content
+        };
+      })
+    );
+
+    const postByTitle = insertedPosts.reduce((accumulator, post) => {
+      accumulator[post.title] = post;
+      return accumulator;
+    }, {});
+
+    await CommunityComment.insertMany(
+      communityComments.map((comment) => {
+        const author = userByEmail[comment.authorEmail.toLowerCase()];
+
+        return {
+          community: postByTitle[comment.postTitle].community,
+          post: postByTitle[comment.postTitle]._id,
+          author: author._id,
+          authorName: author.fullName,
+          authorRole: author.roleInterested,
+          content: comment.content
+        };
+      })
+    );
+
+    await CommunityLike.insertMany([
+      {
+        post: postByTitle['Which metrics matter most in your first performance marketing interview?']._id,
+        user: userByEmail['neha.bhatia@example.com']._id
+      },
+      {
+        post: postByTitle['What should a fresher put in the LinkedIn headline?']._id,
+        user: userByEmail['ananya.ghosh@example.com']._id
+      },
+      {
+        post: postByTitle['When is the right time to specialize instead of staying broad?']._id,
+        user: userByEmail['vikram.joshi@example.com']._id
+      }
+    ]);
+
+    await Connection.insertMany(
+      sampleConnections.map(([requesterEmail, targetEmail]) => ({
+        requester: userByEmail[requesterEmail.toLowerCase()]._id,
+        target: userByEmail[targetEmail.toLowerCase()]._id,
+        status: 'connected'
+      }))
+    );
+
     console.log('Seed data inserted successfully.');
+    console.log(`Inserted roles: ${insertedRoles.length}`);
+    console.log(`Inserted companies: ${insertedCompanies.length}`);
+    console.log(`Inserted resources: ${insertedResources.length}`);
+    console.log(`Inserted communities: ${insertedCommunities.length}`);
     process.exit(0);
   } catch (error) {
     console.error(`Seeding failed: ${error.message}`);

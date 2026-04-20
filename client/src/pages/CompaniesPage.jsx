@@ -1,11 +1,8 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import PageHero from '../components/PageHero';
 import SectionHeader from '../components/SectionHeader';
 import CompanySpotlight from '../components/CompanySpotlight';
 import LoadingSkeletonGrid from '../components/LoadingSkeletonGrid';
 import RevealSection from '../components/RevealSection';
-import { imageSources } from '../assets/images/imageSources';
 import { companyLogoMap } from '../assets/logos/companyLogos';
 import { API } from '../data/siteContent';
 
@@ -81,7 +78,62 @@ const fallbackCompanies = [
     shortDescription: 'Professional platform with talent solutions, B2B marketing, and account growth teams.',
     industry: 'Professional Platform',
     location: 'Sunnyvale, USA'
+  },
+  {
+    name: 'Oracle',
+    logo: companyLogoMap.Oracle,
+    description: 'Enterprise technology company hiring across partner marketing, demand generation, and revenue roles.',
+    shortDescription: 'Enterprise technology company hiring across partner marketing, demand generation, and revenue roles.',
+    industry: 'Enterprise Software',
+    location: 'Austin, USA'
+  },
+  {
+    name: 'Meta',
+    logo: companyLogoMap.Meta,
+    description: 'Global platform company with strong roles across growth, brand strategy, and advertiser success.',
+    shortDescription: 'Global platform company with strong roles across growth, brand strategy, and advertiser success.',
+    industry: 'Social Platforms',
+    location: 'Menlo Park, USA'
+  },
+  {
+    name: 'IBM',
+    logo: companyLogoMap.IBM,
+    description: 'Business technology brand supporting B2B marketing, solution sales, and customer growth teams.',
+    shortDescription: 'Business technology brand supporting B2B marketing, solution sales, and customer growth teams.',
+    industry: 'Enterprise Technology',
+    location: 'Armonk, USA'
+  },
+  {
+    name: 'TCS',
+    logo: companyLogoMap.TCS,
+    description: 'Global IT services company with consulting, enterprise sales, and client acquisition opportunities.',
+    shortDescription: 'Global IT services company with consulting, enterprise sales, and client acquisition opportunities.',
+    industry: 'IT Services',
+    location: 'Mumbai, India'
+  },
+  {
+    name: 'Infosys',
+    logo: companyLogoMap.Infosys,
+    description: 'Digital services and consulting company building teams in solution marketing and client partnerships.',
+    shortDescription: 'Digital services and consulting company building teams in solution marketing and client partnerships.',
+    industry: 'Digital Services',
+    location: 'Bengaluru, India'
+  },
+  {
+    name: 'Accenture',
+    logo: companyLogoMap.Accenture,
+    description: 'Consulting-led organization with roles across brand growth, client strategy, and business development.',
+    shortDescription: 'Consulting-led organization with roles across brand growth, client strategy, and business development.',
+    industry: 'Consulting',
+    location: 'Dublin, Ireland'
   }
+];
+
+const companyHighlights = [
+  'B2B SaaS and CRM teams',
+  'E-commerce and marketplace growth',
+  'Brand, content, and lifecycle marketing',
+  'Sales, partnerships, and revenue operations'
 ];
 
 async function parseJsonSafely(response) {
@@ -148,7 +200,15 @@ function CompaniesPage() {
           return;
         }
 
-        setCompanies(data);
+        const mergedCompanies = [
+          ...data,
+          ...fallbackCompanies.filter(
+            (fallbackCompany) =>
+              !data.some((company) => company?.name?.toLowerCase() === fallbackCompany.name.toLowerCase())
+          )
+        ];
+
+        setCompanies(mergedCompanies);
         setError('');
       } catch (fetchError) {
         console.error('[CompaniesPage] Unable to fetch companies. Using fallback company cards.', {
@@ -167,20 +227,21 @@ function CompaniesPage() {
 
   return (
     <>
-      <PageHero
-        eyebrow="Top employers"
-        title="Companies hiring for modern marketing and sales talent."
-        description="From B2B SaaS to digital marketing and commerce brands, growth teams need people who can connect story, audience, and outcomes."
-        image={imageSources.companies}
-        imageAlt="Presentation and hiring discussions in a bright office"
-      />
-
       <RevealSection className="content-section">
-        <SectionHeader
-          eyebrow="Company spotlight"
-          title="We are connected with leading companies hiring marketing and sales talent."
-          description="Explore top companies, recognize their brands, and discover where strong career opportunities can grow."
-        />
+        <div className="company-directory-shell">
+          <SectionHeader
+            eyebrow="Company spotlight"
+            title="Explore companies hiring modern marketing and sales talent."
+            description="Browse brands that are actively building teams across demand generation, brand strategy, digital marketing, business development, and revenue growth."
+          />
+          <div className="company-directory-highlights" aria-label="Hiring focus areas">
+            {companyHighlights.map((item) => (
+              <span key={item} className="company-directory-highlight">
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
         {loading ? <LoadingSkeletonGrid type="company" count={6} /> : null}
         {error ? <p className="status-text error-text">{error}</p> : null}
         {!loading && !error && companies.length ? (
@@ -189,19 +250,6 @@ function CompaniesPage() {
         {!loading && !error && !companies.length ? (
           <p className="status-text">No companies available right now.</p>
         ) : null}
-      </RevealSection>
-
-      <RevealSection className="content-section alt-section" delay={0.04}>
-        <div className="single-visual-block">
-          <motion.img
-            src={imageSources.contact}
-            alt="Recruiters and hiring teams in discussion"
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.25 }}
-            transition={{ duration: 0.65 }}
-          />
-        </div>
       </RevealSection>
     </>
   );

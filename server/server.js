@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import express from 'express';
@@ -10,9 +11,13 @@ import companyRoutes from './routes/companyRoutes.js';
 import resourceRoutes from './routes/resourceRoutes.js';
 import applicationRoutes from './routes/applicationRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import communityRoutes from './routes/communityRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const uploadsRoot = path.resolve(__dirname, 'uploads');
+const resumeUploadsRoot = path.resolve(uploadsRoot, 'resumes');
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
@@ -37,6 +42,27 @@ app.use(cors({
 app.use(express.json());
 app.use(morgan('dev'));
 
+if (!fs.existsSync(resumeUploadsRoot)) {
+  fs.mkdirSync(resumeUploadsRoot, { recursive: true });
+}
+
+app.get('/uploads/resumes/:filename', (req, res) => {
+  const safeFilename = path.basename(req.params.filename || '');
+  const absolutePath = path.resolve(resumeUploadsRoot, safeFilename);
+
+  res.sendFile(absolutePath, (error) => {
+    if (!error) {
+      return;
+    }
+
+    if (!res.headersSent) {
+      res.status(404).json({ message: 'Resume file not found.' });
+    }
+  });
+});
+
+app.use('/uploads', express.static(uploadsRoot));
+
 app.get('/', (_req, res) => {
   res.json({ message: 'Marketing & Sales Careers API is running.' });
 });
@@ -46,6 +72,9 @@ app.use('/api/companies', companyRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/community', communityRoutes);
+app.use('/api/communities', communityRoutes);
+app.use('/api/users', userRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: `Route not found: ${req.originalUrl}` });

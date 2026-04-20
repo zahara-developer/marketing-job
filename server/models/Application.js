@@ -32,6 +32,11 @@ const applicationSchema = new mongoose.Schema(
       required: true,
       trim: true
     },
+    status: {
+      type: String,
+      enum: ['applied', 'shortlisted', 'rejected', 'interview'],
+      default: 'applied'
+    },
     appliedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',

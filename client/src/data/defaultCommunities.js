@@ -1,0 +1,290 @@
+const defaultCommunities = [
+  {
+    slug: 'digital-marketing',
+    title: 'Digital Marketing',
+    shortDescription: 'Discuss campaigns, channels, analytics, and growth experiments that move the needle.',
+    description: 'Paid media, SEO, lifecycle campaigns, performance thinking, and practical growth lessons.',
+    topicLine: 'Campaign learning, analytics thinking, and channel strategy for modern marketers.',
+    iconKey: 'trending-up',
+    memberCount: 184,
+    discussionCount: 18,
+    joined: false
+  },
+  {
+    slug: 'sales-strategies',
+    title: 'Sales Strategies',
+    shortDescription: 'Share ideas for outreach, discovery, objection handling, and closing with confidence.',
+    description: 'Prospecting frameworks, demos, objection handling, and practical sales execution.',
+    topicLine: 'Smarter selling, stronger outreach, and better conversations with buyers.',
+    iconKey: 'compass',
+    memberCount: 162,
+    discussionCount: 16,
+    joined: false
+  },
+  {
+    slug: 'interview-preparation',
+    title: 'Interview Preparation',
+    shortDescription: 'Prepare for marketing and sales interviews with shared questions and examples.',
+    description: 'Mock questions, recruiter-facing confidence, and role-specific interview preparation.',
+    topicLine: 'Real interview prep support for candidates aiming at marketing and sales roles.',
+    iconKey: 'message-square',
+    memberCount: 141,
+    discussionCount: 11,
+    joined: false
+  },
+  {
+    slug: 'resume-tips',
+    title: 'Resume Tips',
+    shortDescription: 'Improve your resume with stronger positioning and clearer proof points.',
+    description: 'Resume structure, achievement bullets, keywords, and better candidate storytelling.',
+    topicLine: 'Sharper resumes, better role fit, and more confident applications.',
+    iconKey: 'sparkles',
+    memberCount: 127,
+    discussionCount: 10,
+    joined: false
+  },
+  {
+    slug: 'linkedin-profile-building',
+    title: 'LinkedIn/Profile Building',
+    shortDescription: 'Build a stronger professional presence that recruiters notice faster.',
+    description: 'Headlines, summaries, visibility, networking, and recruiter discoverability.',
+    topicLine: 'Turn your profile into a stronger career asset with practical visibility tips.',
+    iconKey: 'users',
+    memberCount: 118,
+    discussionCount: 9,
+    joined: false
+  },
+  {
+    slug: 'career-growth-marketing-sales',
+    title: 'Career Growth',
+    shortDescription: 'Explore next-step paths, specialization choices, and growth opportunities.',
+    description: 'Role transitions, upskilling, leadership readiness, and long-term career direction.',
+    topicLine: 'Career direction, role progression, and growth thinking for ambitious professionals.',
+    iconKey: 'lightbulb',
+    memberCount: 156,
+    discussionCount: 13,
+    joined: false
+  },
+  {
+    slug: 'content-marketing',
+    title: 'Content Marketing',
+    shortDescription: 'Talk through content plans, editorial systems, storytelling, and campaign alignment.',
+    description: 'Blogs, landing pages, content calendars, SEO content, and storytelling that drives demand.',
+    topicLine: 'Content ideas, performance lessons, and practical storytelling systems.',
+    iconKey: 'sparkles',
+    memberCount: 149,
+    discussionCount: 14,
+    joined: false
+  },
+  {
+    slug: 'social-media-marketing',
+    title: 'Social Media Marketing',
+    shortDescription: 'Discuss channel growth, social planning, engagement trends, and creator collaboration.',
+    description: 'Content pillars, platform strategy, campaign performance, and audience-building for modern social teams.',
+    topicLine: 'Platform-specific ideas, content cadence, and engagement-focused execution.',
+    iconKey: 'users',
+    memberCount: 171,
+    discussionCount: 17,
+    joined: false
+  },
+  {
+    slug: 'seo-analytics',
+    title: 'SEO & Analytics',
+    shortDescription: 'Learn through search insights, reporting habits, audits, and organic growth thinking.',
+    description: 'Keyword research, technical SEO, dashboards, search trends, and practical analysis for stronger decisions.',
+    topicLine: 'Search visibility, measurement discipline, and analytics-first marketing conversations.',
+    iconKey: 'trending-up',
+    memberCount: 133,
+    discussionCount: 12,
+    joined: false
+  },
+  {
+    slug: 'email-marketing',
+    title: 'Email Marketing',
+    shortDescription: 'Discuss lifecycle journeys, campaign sends, deliverability, and better retention ideas.',
+    description: 'Automation, segmentation, conversion journeys, and lifecycle communication that improves customer value.',
+    topicLine: 'Lifecycle thinking, smarter sends, and stronger customer retention moments.',
+    iconKey: 'message-square',
+    memberCount: 108,
+    discussionCount: 8,
+    joined: false
+  },
+  {
+    slug: 'branding-advertising',
+    title: 'Branding & Advertising',
+    shortDescription: 'Share ideas around campaign identity, positioning, ad thinking, and message consistency.',
+    description: 'Briefs, brand voice, audience perception, campaign concepts, and creative execution across channels.',
+    topicLine: 'Brand building, ad concepts, and more intentional message design.',
+    iconKey: 'lightbulb',
+    memberCount: 144,
+    discussionCount: 11,
+    joined: false
+  },
+  {
+    slug: 'b2b-sales',
+    title: 'B2B Sales',
+    shortDescription: 'Exchange strategies for consultative selling, deal cycles, and account development.',
+    description: 'Enterprise outreach, qualification, stakeholder management, demos, and relationship-led growth.',
+    topicLine: 'Long-cycle deals, account planning, and more confident business selling.',
+    iconKey: 'compass',
+    memberCount: 166,
+    discussionCount: 15,
+    joined: false
+  },
+  {
+    slug: 'b2c-sales',
+    title: 'B2C Sales',
+    shortDescription: 'Discuss customer conversations, conversion psychology, and retail or direct sales momentum.',
+    description: 'Lead handling, customer objections, in-person selling, and experience-led conversion strategies.',
+    topicLine: 'High-volume selling, better conversations, and stronger customer conversion instincts.',
+    iconKey: 'users',
+    memberCount: 139,
+    discussionCount: 12,
+    joined: false
+  },
+  {
+    slug: 'cold-calling-pitching',
+    title: 'Cold Calling & Pitching',
+    shortDescription: 'Practice stronger opening lines, call flow, pitch structure, and objection control.',
+    description: 'Useful for SDRs, BDEs, and sales freshers improving call confidence, relevance, and sharper follow-through.',
+    topicLine: 'Better first calls, tighter pitch framing, and more confident delivery.',
+    iconKey: 'message-square',
+    memberCount: 121,
+    discussionCount: 9,
+    joined: false
+  },
+  {
+    slug: 'negotiation-skills',
+    title: 'Negotiation Skills',
+    shortDescription: 'Discuss value framing, pushback handling, confidence, and win-win communication.',
+    description: 'Negotiation patterns for client conversations, vendor deals, salary discussions, and account growth.',
+    topicLine: 'Calmer negotiation, clearer value framing, and stronger deal conversations.',
+    iconKey: 'compass',
+    memberCount: 112,
+    discussionCount: 7,
+    joined: false
+  },
+  {
+    slug: 'crm-tools-automation',
+    title: 'CRM Tools & Automation',
+    shortDescription: 'Talk through CRM hygiene, workflows, dashboards, and automation setups that save time.',
+    description: 'Useful for sales ops, lifecycle teams, and anyone improving follow-ups, automation, and reporting.',
+    topicLine: 'Automation, CRM discipline, and cleaner systems for revenue teams.',
+    iconKey: 'trending-up',
+    memberCount: 104,
+    discussionCount: 8,
+    joined: false
+  },
+  {
+    slug: 'internship-fresher-jobs',
+    title: 'Internship & Fresher Jobs',
+    shortDescription: 'Support one another with beginner-friendly roles, entry paths, and first-job preparation.',
+    description: 'A focused space for freshers looking at internships, campus roles, early applications, and confidence-building advice.',
+    topicLine: 'Entry-level guidance, first-role clarity, and fresher-friendly support.',
+    iconKey: 'users',
+    memberCount: 193,
+    discussionCount: 21,
+    joined: false
+  },
+  {
+    slug: 'portfolio-projects',
+    title: 'Portfolio & Projects',
+    shortDescription: 'Improve project storytelling, case-study structure, and practical work samples.',
+    description: 'Useful for candidates turning internships, mock work, and freelance tasks into stronger proof of work.',
+    topicLine: 'Project presentation, proof of work, and stronger case-study thinking.',
+    iconKey: 'sparkles',
+    memberCount: 117,
+    discussionCount: 10,
+    joined: false
+  },
+  {
+    slug: 'certifications-courses',
+    title: 'Certifications & Courses',
+    shortDescription: 'Discuss which certifications matter, how to learn efficiently, and what recruiters value.',
+    description: 'Compare course quality, learning paths, platform credibility, and how to turn certificates into real signals.',
+    topicLine: 'Smarter learning choices, course prioritization, and more credible skill-building.',
+    iconKey: 'lightbulb',
+    memberCount: 126,
+    discussionCount: 9,
+    joined: false
+  },
+  {
+    slug: 'freelancing-marketing',
+    title: 'Freelancing in Marketing',
+    shortDescription: 'Share tips for client discovery, pricing, proposals, and independent project delivery.',
+    description: 'A practical space for marketers building freelance income through campaigns, content, consulting, or analytics support.',
+    topicLine: 'Client work, pricing confidence, and freelancing systems that scale.',
+    iconKey: 'compass',
+    memberCount: 94,
+    discussionCount: 6,
+    joined: false
+  },
+  {
+    slug: 'personal-branding',
+    title: 'Personal Branding',
+    shortDescription: 'Build visibility through profile clarity, public work, thought-sharing, and niche credibility.',
+    description: 'Discuss LinkedIn presence, creator-style learning posts, professional storytelling, and brand consistency.',
+    topicLine: 'Visibility, reputation building, and stronger professional recall.',
+    iconKey: 'sparkles',
+    memberCount: 132,
+    discussionCount: 12,
+    joined: false
+  },
+  {
+    slug: 'lead-generation',
+    title: 'Lead Generation',
+    shortDescription: 'Talk through pipeline building, prospect targeting, qualification, and conversion-ready outreach.',
+    description: 'Ideal for sales and growth teams discussing outbound systems, inbound capture, and prospect quality improvement.',
+    topicLine: 'Stronger pipeline habits, lead quality, and acquisition process thinking.',
+    iconKey: 'trending-up',
+    memberCount: 146,
+    discussionCount: 13,
+    joined: false
+  },
+  {
+    slug: 'performance-marketing',
+    title: 'Performance Marketing',
+    shortDescription: 'Discuss paid media execution, budget allocation, testing frameworks, and ROAS improvement.',
+    description: 'A focused group for Meta ads, Google ads, attribution, landing page quality, and campaign optimization.',
+    topicLine: 'Paid growth, experimentation, and sharper performance marketing decisions.',
+    iconKey: 'trending-up',
+    memberCount: 159,
+    discussionCount: 17,
+    joined: false
+  },
+  {
+    slug: 'market-research',
+    title: 'Market Research',
+    shortDescription: 'Explore customer insight gathering, competitor analysis, and better market understanding.',
+    description: 'Useful for brand, sales, and strategy professionals building stronger research habits and audience context.',
+    topicLine: 'Insight gathering, market awareness, and more evidence-led decisions.',
+    iconKey: 'lightbulb',
+    memberCount: 101,
+    discussionCount: 8,
+    joined: false
+  },
+  {
+    slug: 'copywriting-ad-creatives',
+    title: 'Copywriting & Ad Creatives',
+    shortDescription: 'Improve ad copy, hooks, CTA language, and creative concepts that convert better.',
+    description: 'Share headline ideas, creative testing insights, messaging patterns, and ad iteration lessons.',
+    topicLine: 'Sharper words, stronger hooks, and more persuasive creative execution.',
+    iconKey: 'message-square',
+    memberCount: 138,
+    discussionCount: 14,
+    joined: false
+  },
+  {
+    slug: 'sales-leadership',
+    title: 'Sales Leadership',
+    shortDescription: 'Discuss coaching, team performance, reporting, and leadership habits that improve outcomes.',
+    description: 'A community for senior sellers and managers thinking about culture, reviews, targets, and frontline development.',
+    topicLine: 'Team coaching, leadership systems, and higher-quality revenue management.',
+    iconKey: 'users',
+    memberCount: 97,
+    discussionCount: 7,
+    joined: false
+  }
+];
+
+export default defaultCommunities;

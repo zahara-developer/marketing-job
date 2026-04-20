@@ -5,7 +5,7 @@ import {
   useMemo,
   useState
 } from 'react';
-import { API } from '../data/siteContent';
+import { API, API_BASE } from '../data/siteContent';
 
 const AuthContext = createContext(null);
 const storageKey = 'marketing-sales-auth-token';
@@ -91,28 +91,38 @@ function AuthProvider({ children }) {
   }, [token]);
 
   const authenticate = async (endpoint, payload) => {
-    const requestUrl = `${API}/auth/${endpoint}`;
+    const apiUrl = API_BASE;
+    const requestUrl = `${apiUrl}/api/auth/${endpoint}`;
+    const isFormData = payload instanceof FormData;
 
+    console.log(import.meta.env.VITE_API_URL);
     console.debug('[Auth] authenticate request', {
       endpoint,
+      apiUrl,
       url: requestUrl,
       method: 'POST',
-      hasEmail: Boolean(payload?.email),
-      hasPassword: Boolean(payload?.password)
+      hasEmail: isFormData ? payload.get('email') : Boolean(payload?.email),
+      hasPassword: isFormData ? Boolean(payload.get('password')) : Boolean(payload?.password)
     });
 
     try {
       const response = await fetch(requestUrl, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
+        headers: isFormData
+          ? {}
+          : {
+            'Content-Type': 'application/json'
+          },
+        body: isFormData ? payload : JSON.stringify(payload)
       });
 
       const result = await parseJsonSafely(response, `authenticate:${endpoint}`);
 
       if (!response.ok) {
+        if (response.status === 400 || response.status === 401) {
+          throw new Error(result.message || 'Invalid email or password.');
+        }
+
         throw new Error(result.message || 'Authentication failed.');
       }
 
@@ -128,7 +138,7 @@ function AuthProvider({ children }) {
           error
         });
 
-        throw new Error('Unable to reach the server. Please check that the backend is running on http://localhost:5000.');
+        throw new Error('Server is offline. Please check that the backend is running on http://localhost:5000.');
       }
 
       throw error;
@@ -137,6 +147,54 @@ function AuthProvider({ children }) {
 
   const register = (payload) => authenticate('register', payload);
   const login = (payload) => authenticate('login', payload);
+  const updateProfile = async (payload) => {
+    if (!token) {
+      throw new Error('Please log in again to update your profile.');
+    }
+
+    const response = await fetch(`${API}/auth/profile`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await parseJsonSafely(response, 'updateProfile');
+
+    if (!response.ok) {
+      throw new Error(result.message || 'Unable to update your profile.');
+    }
+
+    setUser(result.user);
+    return result.user;
+  };
+  const uploadResume = async (resumeFile) => {
+    if (!token) {
+      throw new Error('Please log in again to upload your resume.');
+    }
+
+    const payload = new FormData();
+    payload.append('resume', resumeFile);
+
+    const response = await fetch(`${API}/auth/resume`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      body: payload
+    });
+
+    const result = await parseJsonSafely(response, 'uploadResume');
+
+    if (!response.ok) {
+      throw new Error(result.message || 'Unable to upload resume.');
+    }
+
+    setUser(result.user);
+    return result.user;
+  };
   const logout = () => clearAuth();
 
   const value = useMemo(
@@ -147,6 +205,8 @@ function AuthProvider({ children }) {
       isAuthenticated: Boolean(user && token),
       register,
       login,
+      updateProfile,
+      uploadResume,
       logout,
       fetchCurrentUser
     }),

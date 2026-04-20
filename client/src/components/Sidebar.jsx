@@ -1,27 +1,77 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Menu, X, Mail, UserPlus } from 'lucide-react';
+import {
+  BookOpenText,
+  FileText,
+  HelpCircle,
+  Info,
+  Mail,
+  Menu,
+  Newspaper,
+  ShieldCheck,
+  UserPlus,
+  X
+} from 'lucide-react';
+import hireflowLogo from '../assets/logo/hireflow-logo.svg';
 import { useAuth } from '../context/AuthContext';
 
 const authNavItems = [
   { path: '/', label: 'Home' },
-  { path: '/about', label: 'About' },
   { path: '/roles', label: 'Roles' },
   { path: '/companies', label: 'Companies' },
+  { path: '/community', label: 'Community' },
   { path: '/resources', label: 'Resources' },
   { path: '/dashboard', label: 'Dashboard' }
 ];
 
+const publicNavItems = [
+  { path: '/', label: 'Home' },
+  { path: '/about', label: 'About' }
+];
+
+const moreMenuItems = [
+  { path: '/blog', label: 'Blog', icon: Newspaper },
+  { path: '/privacy-policy', label: 'Privacy Policy', icon: ShieldCheck },
+  { path: '/terms-and-conditions', label: 'Terms & Conditions', icon: FileText },
+  { path: '/contact', label: 'Contact Us', icon: Mail },
+  { path: '/faqs', label: 'FAQs', icon: HelpCircle },
+  { path: '/about', label: 'About', icon: Info },
+  { path: '/career-tips', label: 'Career Tips', icon: BookOpenText }
+];
+
 function Sidebar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
   const [showTopbar, setShowTopbar] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const { isAuthenticated, logout, user } = useAuth();
+  const displayName = user?.fullName?.trim() || 'User';
 
   useEffect(() => {
     setMobileOpen(false);
+    setMoreOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (!moreOpen) {
+      return undefined;
+    }
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setMoreOpen(false);
+      }
+    };
+
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [moreOpen]);
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -50,6 +100,7 @@ function Sidebar() {
 
   const resetNavbarState = () => {
     setMobileOpen(false);
+    setMoreOpen(false);
   };
 
   return (
@@ -65,11 +116,9 @@ function Sidebar() {
 
       <header className={`topbar ${showTopbar ? '' : 'topbar-hidden'} ${isScrolled ? 'topbar-scrolled' : ''}`}>
         <div className="topbar-inner">
-          <NavLink to="/" className="topbar-brand" onClick={resetNavbarState}>
-            <span className="brand-mark">MS</span>
-            <div className="brand-copy">
-              <p>Marketing & Sales</p>
-              <span>Career Studio</span>
+          <NavLink to="/" className="topbar-brand animate-logo" onClick={resetNavbarState}>
+            <div className="brand">
+              <img src={hireflowLogo} alt="Hireflow logo" className="brand-logo" />
             </div>
           </NavLink>
 
@@ -87,23 +136,27 @@ function Sidebar() {
                 </NavLink>
               ))}
 
+              <button
+                type="button"
+                className={`nav-link nav-link-button ${moreOpen ? 'active' : ''}`}
+                onClick={() => setMoreOpen(true)}
+              >
+                More
+              </button>
+
               <div className="topbar-mobile-actions">
                 <div className="topbar-mobile-row">
                   <NavLink
-                    to="/contact"
-                    aria-label="Contact page"
+                    to="/profile"
+                    aria-label="Profile page"
                     className={({ isActive }) =>
-                      `contact-corner-link ${isActive ? 'active' : ''}`
+                      `topbar-user-badge ${isActive ? 'active' : ''}`
                     }
                     onClick={resetNavbarState}
                   >
-                    <Mail size={15} />
+                    <span className="topbar-user-emoji" aria-hidden="true">👤</span>
+                    {displayName}
                   </NavLink>
-                  {user ? (
-                    <div className="topbar-user">
-                      <strong>{user.fullName.split(' ')[0]}</strong>
-                    </div>
-                  ) : null}
                 </div>
                 <div className="topbar-mobile-actions-row">
                   <button
@@ -120,7 +173,27 @@ function Sidebar() {
               </div>
             </nav>
           ) : (
-            <div className={`topbar-nav topbar-nav-public ${mobileOpen ? 'topbar-nav-open' : ''}`}>
+            <nav className={`topbar-nav topbar-nav-public ${mobileOpen ? 'topbar-nav-open' : ''}`} aria-label="Public navigation">
+              {publicNavItems.map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  end={item.path === '/'}
+                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                  onClick={resetNavbarState}
+                >
+                  {item.label}
+                </NavLink>
+              ))}
+
+              <button
+                type="button"
+                className={`nav-link nav-link-button ${moreOpen ? 'active' : ''}`}
+                onClick={() => setMoreOpen(true)}
+              >
+                More
+              </button>
+
               <div className="topbar-mobile-actions topbar-mobile-actions-public">
                 <div className="topbar-mobile-actions-row guest-auth-actions">
                   <NavLink
@@ -146,28 +219,23 @@ function Sidebar() {
                   </NavLink>
                 </div>
               </div>
-            </div>
+            </nav>
           )}
 
           <div className="topbar-right">
             {isAuthenticated ? (
               <>
                 <NavLink
-                  to="/contact"
-                  aria-label="Contact page"
+                  to="/profile"
+                  aria-label="Profile page"
                   className={({ isActive }) =>
-                    `contact-corner-link ${isActive ? 'active' : ''}`
+                    `topbar-user-badge ${isActive ? 'active' : ''}`
                   }
                   onClick={resetNavbarState}
                 >
-                  <Mail size={15} />
+                  <span className="topbar-user-emoji" aria-hidden="true">👤</span>
+                  {displayName}
                 </NavLink>
-
-                {user ? (
-                  <div className="topbar-user">
-                    <strong>{user.fullName.split(' ')[0]}</strong>
-                  </div>
-                ) : null}
 
                 <button
                   type="button"
@@ -208,6 +276,48 @@ function Sidebar() {
           </div>
         </div>
       </header>
+
+      {moreOpen ? (
+        <button
+          type="button"
+          aria-label="Close more menu"
+          className="topbar-more-overlay"
+          onClick={() => setMoreOpen(false)}
+        />
+      ) : null}
+
+      <aside className={`topbar-more-drawer ${moreOpen ? 'is-open' : ''}`} aria-hidden={!moreOpen}>
+        <div className="topbar-more-drawer-header">
+          <div>
+            <span className="section-eyebrow">More</span>
+            <h3>Explore more from Marketing &amp; Sales Careers</h3>
+          </div>
+          <button
+            type="button"
+            className="topbar-more-close"
+            aria-label="Close more menu"
+            onClick={() => setMoreOpen(false)}
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="topbar-more-links">
+          {moreMenuItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) => `topbar-more-link ${isActive ? 'active' : ''}`}
+              onClick={resetNavbarState}
+            >
+              <span className="topbar-more-link-icon" aria-hidden="true">
+                <item.icon size={16} />
+              </span>
+              <span>{item.label}</span>
+            </NavLink>
+          ))}
+        </div>
+      </aside>
     </>
   );
 }

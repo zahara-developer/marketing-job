@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { API } from '../data/siteContent';
 
@@ -13,7 +14,8 @@ const initialState = {
 };
 
 function ContactForm({ roles, selectedRole = '' }) {
-  const { user, token } = useAuth();
+  const navigate = useNavigate();
+  const { user, token, fetchCurrentUser } = useAuth();
   const [formData, setFormData] = useState(() => ({
     ...initialState,
     fullName: user?.fullName || '',
@@ -89,6 +91,13 @@ function ContactForm({ roles, selectedRole = '' }) {
         roleInterested: selectedRole || user?.roleInterested || '',
         experienceLevel: user?.experienceLevel || ''
       });
+
+      if (token) {
+        await fetchCurrentUser(token);
+      }
+
+      window.alert('Application submitted successfully.');
+      navigate('/profile', { replace: true });
     } catch (error) {
       setStatus({
         type: 'error',

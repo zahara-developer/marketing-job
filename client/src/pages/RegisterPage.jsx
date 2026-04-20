@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import PageHero from '../components/PageHero';
+import { Sparkles } from 'lucide-react';
 import { imageSources } from '../assets/images/imageSources';
+import hireflowLogo from '../assets/logo/hireflow-logo.svg';
 import { useAuth } from '../context/AuthContext';
 
 const initialForm = {
@@ -42,28 +43,32 @@ function RegisterPage() {
   };
 
   return (
-    <>
-      <PageHero
-        eyebrow="Register"
-        title="Create your account and keep your career details ready."
-        description="Save your profile so you can log in, track your information, and stay connected."
-        image={imageSources.hero}
-        imageAlt="Career registration and onboarding"
-      />
+    <section
+      className="content-section register-page-section"
+      style={{ backgroundImage: `url(${imageSources.hero})` }}
+    >
+      <div className="register-page-overlay" />
+      <motion.div
+        className="register-glass-shell"
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.45 }}
+      >
+        <form className="auth-card register-glass-card" onSubmit={handleSubmit}>
+          <div className="register-form-intro">
+            <div className="login-logo">
+              <img src={hireflowLogo} alt="Hireflow logo" className="logo-img" />
+            </div>
+            <span className="hero-kicker register-form-kicker">
+              <Sparkles size={14} />
+              Register
+            </span>
+            <h2>Create your account</h2>
+            <p>Save your profile and get ready for marketing and sales opportunities.</p>
+          </div>
 
-      <section className="content-section">
-        <div className="auth-shell">
-          <motion.form
-            className="auth-card"
-            onSubmit={handleSubmit}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.45 }}
-          >
-            <h2>Register</h2>
-            <p>Create a secure account and keep your role preferences available after login.</p>
-
+            <div className="register-field-grid">
             <label>
               Full Name
               <input
@@ -108,7 +113,7 @@ function RegisterPage() {
               />
             </label>
 
-            <label>
+            <label className="register-field-full">
               Experience Level
               <select
                 name="experienceLevel"
@@ -122,18 +127,18 @@ function RegisterPage() {
                 <option value="5+ Years">5+ Years</option>
               </select>
             </label>
+          </div>
 
-            <button type="submit" className="primary-button" disabled={submitting}>
-              {submitting ? 'Creating account...' : 'Register'}
-            </button>
-            {status.text ? <p className={`form-status ${status.type}`}>{status.text}</p> : null}
-            <p className="auth-link-copy">
-              Already registered? <Link to="/login">Login here</Link>
-            </p>
-          </motion.form>
-        </div>
-      </section>
-    </>
+          <button type="submit" className="primary-button register-submit-button" disabled={submitting}>
+            {submitting ? 'Creating account...' : 'Register'}
+          </button>
+          {status.text ? <p className={`form-status ${status.type}`}>{status.text}</p> : null}
+          <p className="auth-link-copy register-link-copy">
+            Already registered? <Link to="/login">Login here</Link>
+          </p>
+        </form>
+      </motion.div>
+    </section>
   );
 }
 

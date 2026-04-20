@@ -10,7 +10,13 @@ const companyLinks = {
   Salesforce: 'https://www.salesforce.com/',
   Adobe: 'https://www.adobe.com/',
   Shopify: 'https://www.shopify.com/',
-  Zoho: 'https://www.zoho.com/'
+  Zoho: 'https://www.zoho.com/',
+  Oracle: 'https://www.oracle.com/',
+  Meta: 'https://about.meta.com/',
+  IBM: 'https://www.ibm.com/',
+  TCS: 'https://www.tcs.com/',
+  Infosys: 'https://www.infosys.com/',
+  Accenture: 'https://www.accenture.com/'
 };
 
 const companyRoleTags = {
@@ -22,7 +28,13 @@ const companyRoleTags = {
   Adobe: ['Brand Management', 'Digital Marketing', 'Marketing Analyst'],
   Shopify: ['Digital Marketing', 'Business Development', 'Sales Executive'],
   Zoho: ['Sales Executive', 'Inside Sales', 'Marketing Analyst'],
-  LinkedIn: ['Brand Management', 'Business Development', 'Digital Marketing']
+  LinkedIn: ['Brand Management', 'Business Development', 'Digital Marketing'],
+  Oracle: ['Enterprise Sales', 'Demand Generation', 'Partner Marketing'],
+  Meta: ['Growth Marketing', 'Brand Strategy', 'Account Management'],
+  IBM: ['B2B Marketing', 'Solution Sales', 'Client Success'],
+  TCS: ['Business Development', 'Inside Sales', 'Account Growth'],
+  Infosys: ['Digital Marketing', 'Client Partnerships', 'Solution Consulting'],
+  Accenture: ['Brand Marketing', 'Consultative Sales', 'Growth Strategy']
 };
 
 function CompanySpotlight({ companies }) {
@@ -85,6 +97,9 @@ function CompanySpotlight({ companies }) {
                   ))}
                 </div>
               ) : null}
+              <div className="company-card-footer">
+                <span className="company-card-cta">Explore jobs</span>
+              </div>
             </a>
           </motion.article>
         );

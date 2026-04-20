@@ -1,251 +1,477 @@
+import { useEffect, useState } from 'react';
 import {
-  ArrowRight,
-  Compass,
-  FileText,
-  Megaphone,
+  ChevronLeft,
+  ChevronRight,
+  CircleCheckBig,
+  Eye,
+  MapPin,
+  MessageSquareQuote,
+  Search,
+  Sparkles,
   Target,
-  TrendingUp,
-  Users
+  Upload,
+  UserPlus,
+  Workflow
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import SectionHeader from '../components/SectionHeader';
-import careerGrowthVisual from '../assets/images/career-growth.svg';
-import interviewMeetingVisual from '../assets/images/interview-meeting.svg';
-import jobSearchVisual from '../assets/images/job-search.svg';
-import marketingTeamVisual from '../assets/images/marketing-team.svg';
-import officeWorkVisual from '../assets/images/office-work.svg';
+import { useNavigate } from 'react-router-dom';
 import { imageSources } from '../assets/images/imageSources';
-import { companyLogoMap, heroTrustedBrands, homepageLogoStrip } from '../assets/logos/companyLogos';
-import { aboutPoints } from '../data/siteContent';
-import { useAuth } from '../context/AuthContext';
-import useSiteData from '../hooks/useSiteData';
+import { companyLogoMap } from '../assets/logos/companyLogos';
 
-const categoryItems = [
-  { title: 'Digital Marketing', icon: Megaphone, image: marketingTeamVisual, alt: 'Digital Marketing illustration' },
-  { title: 'Sales Executive', icon: Target, image: interviewMeetingVisual, alt: 'Sales Executive illustration' },
-  { title: 'Business Development', icon: TrendingUp, image: careerGrowthVisual, alt: 'Business Development illustration' },
-  { title: 'Brand Management', icon: Compass, image: officeWorkVisual, alt: 'Brand Management illustration' },
-  { title: 'Marketing Analyst', icon: FileText, image: jobSearchVisual, alt: 'Marketing Analyst illustration' },
-  { title: 'Inside Sales', icon: Users, image: interviewMeetingVisual, alt: 'Inside Sales illustration' }
+const gettingStartedSteps = [
+  {
+    title: 'Search your job',
+    description: 'Find marketing and sales roles that match your interests and skills.',
+    icon: Search
+  },
+  {
+    title: 'Register your account',
+    description: 'Create your profile to unlock job applications and recruiter visibility.',
+    icon: UserPlus
+  },
+  {
+    title: 'Upload your resume',
+    description: 'Add your resume so companies can review your profile quickly.',
+    icon: Upload
+  },
+  {
+    title: 'Apply for dream job',
+    description: 'Apply to the best-fit opportunities in one smooth flow.',
+    icon: CircleCheckBig
+  }
+];
+
+const featuredHighlights = [
+  {
+    title: 'Growth Marketing Specialist',
+    description: 'Performance-focused roles built around campaigns, funnels, and measurable brand growth.',
+    image: imageSources.about
+  },
+  {
+    title: 'Enterprise Sales Executive',
+    description: 'High-intent revenue opportunities for candidates who thrive in pipeline and account conversations.',
+    image: imageSources.companies
+  },
+  {
+    title: 'Brand & Content Lead',
+    description: 'Creative commercial roles for marketers who shape positioning, storytelling, and market visibility.',
+    image: imageSources.resources
+  }
+];
+
+const trustedBrands = [
+  { name: 'Zoho' },
+  { name: 'Wipro', mark: 'W' },
+  { name: 'HCL', mark: 'HCL' },
+  { name: 'Deloitte', mark: 'D' },
+  { name: 'Capgemini', mark: 'C' },
+  { name: 'Cognizant', mark: 'C' },
+  { name: 'Google' },
+  { name: 'Amazon' },
+  { name: 'Microsoft' },
+  { name: 'Salesforce' },
+  { name: 'Adobe' },
+  { name: 'HubSpot' },
+  { name: 'Infosys' },
+  { name: 'TCS' },
+  { name: 'Accenture' }
+].map((brand) => ({
+  ...brand,
+  logo: companyLogoMap[brand.name] || null
+}));
+
+const hiringBenefits = [
+  {
+    title: 'Focused talent pool',
+    description: 'Only marketing and sales candidates, easier to match faster.',
+    icon: Target
+  },
+  {
+    title: 'Better visibility',
+    description: 'Structured profiles and resumes help recruiters review candidates quickly.',
+    icon: Eye
+  },
+  {
+    title: 'Smarter hiring flow',
+    description: 'From discovery to shortlist, the platform keeps the process simple.',
+    icon: Workflow
+  }
+];
+
+const testimonials = [
+  {
+    quote: 'This platform helped me find a marketing role much faster because the jobs actually matched my background.',
+    author: 'Aditi Verma',
+    role: 'Performance Marketing Associate'
+  },
+  {
+    quote: 'The experience felt clean and focused. I could upload my resume, save roles, and apply without hunting through noise.',
+    author: 'Rahul Menon',
+    role: 'Business Development Executive'
+  },
+  {
+    quote: 'The companies felt more relevant than generic job boards, which made my applications feel more intentional.',
+    author: 'Sneha Kapoor',
+    role: 'Content Strategist'
+  }
 ];
 
 function HomePage() {
-  const { isAuthenticated } = useAuth();
-  const { companies, loading } = useSiteData();
-  const trustedCompanies = companies.slice(0, 6);
+  const navigate = useNavigate();
+  const [searchForm, setSearchForm] = useState({
+    keyword: '',
+    role: '',
+    location: ''
+  });
+  const [activeHighlight, setActiveHighlight] = useState(0);
+
+  const handleSearchChange = (event) => {
+    const { name, value } = event.target;
+    setSearchForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    const hasSearchInput =
+      searchForm.keyword.trim() ||
+      searchForm.role.trim() ||
+      searchForm.location.trim();
+
+    if (!hasSearchInput) {
+      return;
+    }
+
+    const params = new URLSearchParams();
+
+    if (searchForm.keyword.trim()) {
+      params.set('keyword', searchForm.keyword.trim());
+    }
+
+    if (searchForm.role) {
+      params.set('role', searchForm.role);
+    }
+
+    if (searchForm.location.trim()) {
+      params.set('location', searchForm.location.trim());
+    }
+
+    navigate(`/roles${params.toString() ? `?${params.toString()}` : ''}`);
+  };
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setActiveHighlight((prev) => (prev + 1) % featuredHighlights.length);
+    }, 4200);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
+
+  const handlePreviousHighlight = () => {
+    setActiveHighlight((prev) => (prev - 1 + featuredHighlights.length) % featuredHighlights.length);
+  };
+
+  const handleNextHighlight = () => {
+    setActiveHighlight((prev) => (prev + 1) % featuredHighlights.length);
+  };
 
   return (
     <>
-      <section className="landing-shell">
-        <div
-          className="landing-hero-grid"
-          style={{
-            backgroundImage: `linear-gradient(90deg, rgba(255, 250, 246, 0.76) 0%, rgba(255, 246, 239, 0.54) 38%, rgba(84, 35, 61, 0.08) 100%), url(${imageSources.hero})`
-          }}
+      <section className="landing-shell portal-home-shell">
+        <div className="portal-home-hero">
+          <div className="portal-home-hero-media" aria-hidden="true">
+            <img
+              src={imageSources.hero}
+              alt=""
+              className="portal-home-hero-background-image"
+            />
+            <div className="portal-home-hero-background-overlay" />
+          </div>
+
+          <div className="portal-home-hero-top">
+            <motion.div
+              className="landing-hero-copy portal-home-copy"
+              initial={{ opacity: 0, y: 26 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55 }}
+            >
+              <span className="hero-kicker">Marketing &amp; Sales hiring platform</span>
+              <h1>Find the Right Marketing &amp; Sales Opportunity</h1>
+              <p>
+                Search focused roles, discover hiring brands, and start your next move on a cleaner,
+                more modern career platform.
+              </p>
+            </motion.div>
+          </div>
+
+          <div className="portal-home-search-layer">
+            <motion.form
+              className="portal-search-bar portal-search-bar-bottom"
+              onSubmit={handleSearchSubmit}
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.12 }}
+            >
+              <label className="portal-search-field portal-search-field-wide">
+                <span>Search</span>
+                <div className="portal-search-input">
+                  <Search size={16} />
+                  <input
+                    type="text"
+                    name="keyword"
+                    value={searchForm.keyword}
+                    onChange={handleSearchChange}
+                    placeholder="Search roles, companies, skills..."
+                  />
+                </div>
+              </label>
+
+              <label className="portal-search-field">
+                <span>Location</span>
+                <div className="portal-search-location">
+                  <MapPin size={16} />
+                  <input
+                    type="text"
+                    name="location"
+                    value={searchForm.location}
+                    onChange={handleSearchChange}
+                    placeholder="Mumbai, Bengaluru, Remote"
+                  />
+                </div>
+              </label>
+
+              <label className="portal-search-field">
+                <span>Type</span>
+                <select name="role" value={searchForm.role} onChange={handleSearchChange}>
+                  <option value="">All types</option>
+                  {[
+                    'Digital Marketing',
+                    'Social Media Manager',
+                    'SEO Specialist',
+                    'Content Strategist',
+                    'Marketing Analyst',
+                    'Sales Executive',
+                    'Business Development Executive',
+                    'CRM Executive'
+                  ].map((role) => (
+                    <option key={role} value={role}>
+                      {role}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <button type="submit" className="primary-button portal-search-button">
+                <Search size={18} />
+                Search Jobs
+              </button>
+            </motion.form>
+          </div>
+        </div>
+      </section>
+
+      <section className="content-section portal-home-carousel-section">
+        <motion.div
+          className="portal-home-carousel-shell"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.45 }}
         >
-          <motion.div
-            className="landing-hero-copy"
-            initial={{ opacity: 0, y: 26 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55 }}
-          >
-            <span className="hero-kicker">Marketing &amp; Sales hiring platform</span>
-            <h1>Find the Right Marketing &amp; Sales Opportunity</h1>
-            <p>
-              Explore focused roles, connect with hiring companies, and discover better
-              career opportunities in marketing and sales.
-            </p>
-
-            <div className="hero-actions">
-              <Link to={isAuthenticated ? '/roles' : '/register'} className="primary-button">
-                {isAuthenticated ? 'Explore Roles' : 'Create Account'}
-                <ArrowRight size={18} />
-              </Link>
-              <Link to={isAuthenticated ? '/dashboard' : '/login'} className="secondary-button">
-                {isAuthenticated ? 'Open Dashboard' : 'Login'}
-              </Link>
+          <div className="portal-home-carousel-header">
+            <div>
+              <span className="section-eyebrow">Featured Role Highlights</span>
+              <h2>Spotlight opportunities across marketing and sales.</h2>
             </div>
+            <div className="portal-home-carousel-actions">
+              <button
+                type="button"
+                className="carousel-button portal-home-carousel-button"
+                onClick={handlePreviousHighlight}
+                aria-label="Previous highlight"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <button
+                type="button"
+                className="carousel-button portal-home-carousel-button"
+                onClick={handleNextHighlight}
+                aria-label="Next highlight"
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          </div>
 
-            <div className="hero-trusted-brands" aria-label="Trusted marketing and sales brands">
-              <span className="hero-trusted-label">Trusted marketing and sales brands</span>
-              <div className="hero-trusted-logos">
-              {heroTrustedBrands.map((company) => (
-                  <div key={company.name} className="hero-trusted-logo-item">
-                    <img src={company.logo} alt={`${company.name} logo`} className="hero-trusted-logo-image" />
+          <div className="portal-home-carousel-stage">
+            {featuredHighlights.map((item, index) => (
+              <motion.article
+                key={item.title}
+                className={`portal-home-carousel-card ${index === activeHighlight ? 'active' : ''}`}
+                initial={false}
+                animate={{
+                  opacity: index === activeHighlight ? 1 : 0,
+                  x: index === activeHighlight ? 0 : 24,
+                  pointerEvents: index === activeHighlight ? 'auto' : 'none'
+                }}
+                transition={{ duration: 0.45 }}
+              >
+                <div className="portal-home-carousel-copy">
+                  <span className="portal-home-carousel-kicker">Hiring highlight</span>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                </div>
+                <div className="portal-home-carousel-visual">
+                  <img src={item.image} alt={item.title} />
+                </div>
+              </motion.article>
+            ))}
+          </div>
+
+          <div className="carousel-dots portal-home-carousel-dots">
+            {featuredHighlights.map((item, index) => (
+              <button
+                key={item.title}
+                type="button"
+                className={`carousel-dot ${index === activeHighlight ? 'active' : ''}`}
+                onClick={() => setActiveHighlight(index)}
+                aria-label={`Go to ${item.title}`}
+              />
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+      <section className="landing-logo-marquee-section portal-home-trusted" aria-label="Trusted by leading hiring brands">
+        <div className="landing-logo-marquee-shell portal-home-trusted-shell">
+          <div className="portal-home-trusted-header">
+            <h2>Trusted by leading hiring brands</h2>
+          </div>
+            <div className="portal-home-logo-marquee">
+              <div className="portal-home-logo-track">
+                {[...trustedBrands, ...trustedBrands].map((company, index) => (
+                  <div
+                    key={`${company.name}-${index}`}
+                    className="portal-home-logo-card"
+                    aria-hidden={index >= trustedBrands.length}
+                  >
+                    {company.logo ? (
+                      <img
+                        src={company.logo}
+                        alt={index < trustedBrands.length ? `${company.name} logo` : ''}
+                        className="landing-logo-marquee-image"
+                      />
+                    ) : (
+                      <span className="portal-home-logo-mark" aria-hidden="true">
+                        {company.mark || company.name.slice(0, 2)}
+                      </span>
+                    )}
+                    <span className="portal-home-logo-name">{company.name}</span>
                   </div>
                 ))}
               </div>
             </div>
-          </motion.div>
         </div>
       </section>
 
-      <section className="landing-logo-marquee-section" aria-label="Trusted by leading hiring brands">
-        <div className="landing-logo-marquee-shell">
-          <div className="landing-logo-marquee-header">
-            <span className="section-eyebrow">Trusted by leading hiring brands</span>
+      <section className="content-section portal-home-company-benefits-section">
+        <div className="portal-home-company-benefits-shell">
+          <div className="section-header section-header-center portal-home-company-benefits-header">
+            <span className="section-eyebrow">Hiring Partners</span>
+            <h2>Why companies hire through us</h2>
           </div>
-          <div className="landing-logo-marquee" role="presentation">
-            <div className="landing-logo-marquee-track">
-              {[...homepageLogoStrip, ...homepageLogoStrip].map((company, index) => (
-                <div
-                  key={`${company.name}-${index}`}
-                  className="landing-logo-marquee-item"
-                  aria-hidden={index >= homepageLogoStrip.length}
-                >
-                  <img
-                    src={company.logo}
-                    alt={index < homepageLogoStrip.length ? `${company.name} logo` : ''}
-                    className="landing-logo-marquee-image"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="content-section">
-        <div className="landing-intro-layout">
-          <div>
-            <SectionHeader
-              eyebrow="Why This Platform"
-              title="Focused hiring for marketing and sales careers."
-              description="The strongest growth teams need people who can combine insight, communication, positioning, and measurable business impact."
-            />
-            <div className="about-copy landing-about-copy">
-              {aboutPoints.map((point, index) => (
-                <motion.div
-                  key={point.title}
-                  className="about-point"
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -18 : 18 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, amount: 0.25 }}
-                  transition={{ duration: 0.45 }}
-                >
-                  <point.icon size={20} />
-                  <div>
-                    <h3>{point.title}</h3>
-                    <p>{point.description}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-
-          <motion.div
-            className="landing-support-visual"
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.45 }}
-          >
-            <img src={imageSources.about} alt="Marketing and sales professionals planning growth strategy" />
-          </motion.div>
-        </div>
-      </section>
-
-      <section className="content-section">
-        <SectionHeader
-          eyebrow="Popular Roles"
-          title="Explore the career paths people usually start with first."
-          description="A short category overview helps job seekers understand where they fit before moving into the full platform."
-        />
-        <div className="landing-category-grid">
-          {categoryItems.map((item, index) => (
-            <motion.article
-              key={item.title}
-              className="landing-category-card"
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.35, delay: index * 0.05 }}
+          <div className="portal-home-company-benefits-layout">
+            <motion.div
+              className="portal-home-company-visual"
+              initial={{ opacity: 0, x: -18 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.45 }}
             >
-              <div className="landing-category-image-wrap">
-                <img src={item.image} alt={item.alt} className="landing-category-image" />
-              </div>
-              <div className="landing-category-icon">
-                <item.icon size={16} />
-              </div>
-              <h3>{item.title}</h3>
-            </motion.article>
-          ))}
-        </div>
-      </section>
+              <img src={imageSources.resources} alt="Hiring managers reviewing resumes and shortlisted candidates" />
+            </motion.div>
 
-      {trustedCompanies.length ? (
-        <section className="content-section">
-          <SectionHeader
-            eyebrow="Hiring Partners"
-            title="Companies hiring on the platform."
-            description="A simple company section gives users quick trust and context without overloading the page."
-          />
-          {loading ? <p className="status-text">Loading companies...</p> : null}
-          {!loading ? (
-            <div className="landing-logo-grid">
-              {trustedCompanies.map((company, index) => (
+            <div className="portal-home-company-benefits-grid">
+              {hiringBenefits.map((item, index) => (
                 <motion.article
-                  key={company._id || company.name}
-                  className="landing-logo-card"
-                  initial={{ opacity: 0, y: 16 }}
+                  key={item.title}
+                  className="portal-home-company-benefit-card"
+                  initial={{ opacity: 0, y: 18 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.35, delay: index * 0.05 }}
+                  viewport={{ once: true, amount: 0.25 }}
+                  transition={{ duration: 0.35, delay: index * 0.06 }}
                 >
-                  <div className="landing-logo-mark-wrap">
-                    <img
-                      src={companyLogoMap[company.name] || company.logo}
-                      alt={`${company.name} logo`}
-                      className="landing-logo-image"
-                      onError={(event) => {
-                        event.currentTarget.style.display = 'none';
-                        event.currentTarget.nextElementSibling?.classList.add('landing-logo-mark-visible');
-                      }}
-                    />
-                    <div className="landing-logo-mark">
-                      {company.name
-                        .split(' ')
-                        .map((part) => part[0])
-                        .join('')
-                        .slice(0, 2)
-                        .toUpperCase()}
-                    </div>
+                  <div className="portal-home-company-benefit-icon">
+                    <item.icon size={18} />
                   </div>
-                  <div className="landing-logo-copy">
-                    <strong>{company.name}</strong>
-                    <span>{company.industry}</span>
-                  </div>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
                 </motion.article>
               ))}
             </div>
-          ) : null}
-        </section>
-      ) : null}
+          </div>
+        </div>
+      </section>
 
-      <section className="content-section">
-        <motion.div
-          className="landing-final-cta"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 0.45 }}
-        >
-          <div>
-            <span className="section-eyebrow">Next Step</span>
-            <h2>Start your next move in marketing and sales.</h2>
-            <p>Join the platform to explore roles, connect with hiring teams, and move into the full experience.</p>
+      <section className="content-section portal-home-steps-section">
+        <div className="portal-home-process-shell">
+          <div className="section-header section-header-center portal-home-process-header">
+            <span className="section-eyebrow">Getting Started</span>
+            <h2>Getting Started Is Easy</h2>
+            <p>Start your marketing and sales job journey in four simple steps.</p>
           </div>
-          <div className="hero-actions">
-            <Link to={isAuthenticated ? '/dashboard' : '/register'} className="primary-button">
-              {isAuthenticated ? 'Open Dashboard' : 'Create Account'}
-              <ArrowRight size={18} />
-            </Link>
-            <Link to={isAuthenticated ? '/roles' : '/login'} className="secondary-button">
-              {isAuthenticated ? 'View Roles' : 'Login'}
-            </Link>
+          <div className="portal-home-steps-grid">
+            {gettingStartedSteps.map((step, index) => (
+              <motion.article
+                key={step.title}
+                className={`portal-home-step-card portal-home-step-card-${index + 1}`}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ duration: 0.35, delay: index * 0.06 }}
+              >
+                <div className="portal-home-step-badge">
+                  <step.icon size={18} />
+                </div>
+                <div className="portal-home-step-top">
+                  <span>0{index + 1}</span>
+                </div>
+                <h3>{step.title}</h3>
+                <p>{step.description}</p>
+                {index < gettingStartedSteps.length - 1 ? (
+                  <div className={`portal-home-step-connector portal-home-step-connector-${index + 1}`} aria-hidden="true">
+                    <svg viewBox="0 0 180 90" preserveAspectRatio="none">
+                      <path d="M6 42 C52 10, 118 10, 174 44" />
+                    </svg>
+                  </div>
+                ) : null}
+              </motion.article>
+            ))}
           </div>
-        </motion.div>
+        </div>
+      </section>
+
+      <section className="content-section portal-home-testimonials-section">
+        <div className="section-header section-header-center">
+          <span className="section-eyebrow">Testimonials</span>
+          <h2>What candidates say about the experience.</h2>
+        </div>
+        <div className="portal-home-testimonial-grid">
+          {testimonials.map((item, index) => (
+            <motion.article
+              key={item.author}
+              className="portal-home-testimonial-card"
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.35, delay: index * 0.05 }}
+            >
+              <MessageSquareQuote size={18} />
+              <p>{item.quote}</p>
+              <strong>{item.author}</strong>
+              <span>{item.role}</span>
+            </motion.article>
+          ))}
+        </div>
       </section>
     </>
   );

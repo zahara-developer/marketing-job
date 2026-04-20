@@ -1,6 +1,7 @@
-import { Link, Outlet } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter, Youtube } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Twitter, Youtube } from 'lucide-react';
+import hireflowLogo from '../assets/logo/hireflow-logo.svg';
 import Sidebar from './Sidebar';
 import FloatingChatbot from './FloatingChatbot';
 
@@ -17,26 +18,27 @@ const footerGroups = [
     title: 'Platform',
     links: [
       { label: 'Home', to: '/' },
-      { label: 'About', to: '/about' },
       { label: 'Roles', to: '/roles' },
+      { label: 'Companies', to: '/companies' },
+      { label: 'Community', to: '/community' },
       { label: 'Resources', to: '/resources' }
     ]
   },
   {
-    title: 'Support',
+    title: 'Legal & Support',
     links: [
-      { label: 'FAQs', to: '/faqs' },
       { label: 'Blog', to: '/blog' },
-      { label: 'Login', to: '/login' },
-      { label: 'Create Account', to: '/register' }
+      { label: 'Privacy Policy', to: '/privacy-policy' },
+      { label: 'Terms & Conditions', to: '/terms-and-conditions' },
+      { label: 'Contact Us', to: '/contact' },
+      { label: 'FAQs', to: '/faqs' }
     ]
   },
   {
     title: 'Company',
     links: [
-      { label: 'Companies', to: '/companies' },
+      { label: 'About', to: '/about' },
       { label: 'Career Tips', to: '/career-tips' },
-      { label: 'Contact', to: '/contact' },
       { label: 'Dashboard', to: '/dashboard' }
     ]
   }
@@ -50,70 +52,74 @@ function AppLayout() {
         <Outlet />
         <footer className="site-footer">
           <motion.div
-            className="footer-brand-block"
+            className="footer-main-grid"
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.45 }}
           >
-            <div className="footer-copy">
-              <p>Marketing & Sales Career Studio</p>
-              <span>Focused hiring and career discovery for marketing, sales, growth, and brand teams.</span>
-            </div>
-            <div className="footer-contact-list">
-              <span><Mail size={16} /> contact@marketingsalesstudio.com</span>
-              <span><Phone size={16} /> +91 9876543210</span>
-              <span><MapPin size={16} /> Bengaluru, India</span>
-            </div>
-          </motion.div>
+            <div className="footer-brand-block">
+              <div className="footer-brand-top">
+                <div className="footer-brand">
+                  <img src={hireflowLogo} alt="Hireflow logo" className="logo-img" />
+                </div>
+                <div className="footer-copy">
+                  <p>Marketing &amp; Sales Careers</p>
+                  <span>Connecting talent with marketing and sales opportunities.</span>
+                </div>
+              </div>
 
-          <motion.div
-            className="footer-links-grid"
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.45, delay: 0.05 }}
-          >
+              <div className="footer-socials" aria-label="Social media links">
+                {socialLinks.map((item) => (
+                  <a
+                    key={item.label}
+                    className="footer-social-link"
+                    href={item.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={item.label}
+                  >
+                    <item.icon size={18} />
+                  </a>
+                ))}
+              </div>
+            </div>
+
             {footerGroups.map((group) => (
-              <div key={group.title} className="footer-link-group">
+              <motion.div
+                key={group.title}
+                className="footer-link-group"
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.45, delay: 0.04 }}
+              >
                 <strong>{group.title}</strong>
                 <div className="footer-link-list">
                   {group.links.map((link) => (
-                    <Link key={link.to} to={link.to}>{link.label}</Link>
+                    <NavLink
+                      key={link.to}
+                      to={link.to}
+                      end={link.to === '/'}
+                      className={({ isActive }) => `footer-link ${isActive ? 'active' : ''}`}
+                    >
+                      {link.label}
+                    </NavLink>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             ))}
-            <div className="footer-link-group">
-              <strong>Contact</strong>
-              <div className="footer-link-list footer-contact-links">
-                <span>Email support</span>
-                <span>Hiring assistance</span>
-                <span>Candidate guidance</span>
-              </div>
-            </div>
           </motion.div>
 
           <motion.div
-            className="footer-socials"
-            aria-label="Social media links"
+            className="footer-bottom-bar"
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.45, delay: 0.1 }}
+            transition={{ duration: 0.45, delay: 0.08 }}
           >
-            {socialLinks.map((item) => (
-              <a
-                key={item.label}
-                className="footer-social-link"
-                href={item.href}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={item.label}
-              >
-                <item.icon size={18} />
-              </a>
-            ))}
+            <span>&copy; 2026 Marketing &amp; Sales Careers. All rights reserved.</span>
+            <span>Connecting talent with marketing and sales opportunities.</span>
           </motion.div>
         </footer>
       </main>
