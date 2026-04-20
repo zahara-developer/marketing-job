@@ -23,45 +23,16 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const app = express();
 const port = Number(process.env.PORT) || 5000;
-const configuredOrigins = [
-  process.env.CLIENT_URL,
-  process.env.VERCEL_FRONTEND_URL,
-  process.env.FRONTEND_URL,
-  'https://marketing-job-client.vercel.app',
-  ...(process.env.ALLOWED_ORIGINS || '')
-    .split(',')
-    .map((origin) => origin.trim())
-    .filter(Boolean)
-].map((origin) => origin.replace(/\/+$/, ''));
-
-const vercelPreviewOrigin = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL.replace(/\/+$/, '')}`
-  : '';
-
-const allowedOrigins = Array.from(
-  new Set(
-    [
-      ...configuredOrigins,
-      vercelPreviewOrigin,
-      'http://localhost:5173',
-      'http://localhost:5174'
-    ].filter(Boolean)
-  )
-);
-
 app.use(cors({
-  origin(origin, callback) {
-    const normalizedOrigin = origin ? origin.replace(/\/+$/, '') : '';
-    const isVercelOrigin = /\.vercel\.app$/i.test(new URL(normalizedOrigin || 'http://invalid').hostname || '');
-
-    if (!origin || allowedOrigins.includes(normalizedOrigin) || isVercelOrigin) {
-      return callback(null, true);
-    }
-
-    return callback(new Error(`CORS blocked for origin: ${origin}`));
-  },
+  origin: [
+    'https://marketing-job-client.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:5174'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   credentials: true
 }));
+app.options('*', cors());
 app.use(express.json());
 app.use(morgan('dev'));
 

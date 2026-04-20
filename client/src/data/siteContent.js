@@ -8,21 +8,10 @@ import {
 } from 'lucide-react';
 
 const rawConfiguredApiUrl = (import.meta.env.VITE_API_URL || '').trim().replace(/\/+$/, '');
-const localDevBaseUrl = 'http://localhost:5000';
+const localDevApiUrl = 'http://localhost:5000/api';
 
-const normalizeApiBase = (value) => {
-  if (!value) {
-    return '';
-  }
-
-  return value.replace(/\/api$/i, '').replace(/\/+$/, '');
-};
-
-export const API_BASE = normalizeApiBase(
-  rawConfiguredApiUrl || (import.meta.env.DEV ? localDevBaseUrl : '')
-);
-
-export const API = API_BASE ? `${API_BASE}/api` : '';
+export const API_BASE = rawConfiguredApiUrl || (import.meta.env.DEV ? localDevApiUrl : '');
+export const API = API_BASE;
 
 if (import.meta.env.PROD && !rawConfiguredApiUrl) {
   console.warn('[API] VITE_API_URL is not set. Production API requests will fail until it is configured.');
