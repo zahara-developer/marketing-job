@@ -21,6 +21,10 @@ export const fetchCommunityEndpoint = async (
   options = {},
   fallbackMessage = 'Unable to load community right now.'
 ) => {
+  if (!API) {
+    throw new Error(fallbackMessage);
+  }
+
   let lastError = null;
 
   for (const base of communityRouteBases) {

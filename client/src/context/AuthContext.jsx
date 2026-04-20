@@ -91,6 +91,10 @@ function AuthProvider({ children }) {
   }, [token]);
 
   const authenticate = async (endpoint, payload) => {
+    if (!API) {
+      throw new Error('Server configuration is missing. Please try again later.');
+    }
+
     const apiUrl = API_BASE;
     const requestUrl = `${apiUrl}/api/auth/${endpoint}`;
     const isFormData = payload instanceof FormData;

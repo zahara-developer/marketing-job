@@ -27,6 +27,7 @@ const configuredOrigins = [
   process.env.CLIENT_URL,
   process.env.VERCEL_FRONTEND_URL,
   process.env.FRONTEND_URL,
+  'https://marketing-job-client.vercel.app',
   ...(process.env.ALLOWED_ORIGINS || '')
     .split(',')
     .map((origin) => origin.trim())
@@ -50,7 +51,10 @@ const allowedOrigins = Array.from(
 
 app.use(cors({
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    const normalizedOrigin = origin ? origin.replace(/\/+$/, '') : '';
+    const isVercelOrigin = /\.vercel\.app$/i.test(new URL(normalizedOrigin || 'http://invalid').hostname || '');
+
+    if (!origin || allowedOrigins.includes(normalizedOrigin) || isVercelOrigin) {
       return callback(null, true);
     }
 
@@ -127,6 +131,9 @@ const startServer = async () => {
     });
   } catch (error) {
     console.error('Server startup failed because MongoDB is unavailable or misconfigured.');
+    if (!process.env.MONGODB_URI) {
+      console.error('MONGODB_URI is missing. Set it in your Render environment variables.');
+    }
     process.exit(1);
   }
 };

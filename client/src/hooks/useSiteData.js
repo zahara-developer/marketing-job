@@ -11,6 +11,12 @@ function useSiteData() {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!API) {
+        setError('Server configuration is missing.');
+        setLoading(false);
+        return;
+      }
+
       try {
         const results = await Promise.allSettled([
           fetch(`${API}/roles`).then((response) =>
