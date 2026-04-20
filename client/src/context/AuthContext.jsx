@@ -95,7 +95,6 @@ function AuthProvider({ children }) {
     const requestUrl = `${apiUrl}/api/auth/${endpoint}`;
     const isFormData = payload instanceof FormData;
 
-    console.log(import.meta.env.VITE_API_URL);
     console.debug('[Auth] authenticate request', {
       endpoint,
       apiUrl,
@@ -138,7 +137,11 @@ function AuthProvider({ children }) {
           error
         });
 
-        throw new Error('Server is offline. Please check that the backend is running on http://localhost:5000.');
+        throw new Error(
+          import.meta.env.DEV
+            ? `Unable to connect to server. Please check that the backend is running on ${API_BASE}.`
+            : 'Unable to connect to server. Please try again later.'
+        );
       }
 
       throw error;

@@ -7,8 +7,16 @@ import {
   Target
 } from 'lucide-react';
 
-export const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/+$/, '');
+const configuredApiBase = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+const browserOrigin =
+  typeof window !== 'undefined' ? window.location.origin.replace(/\/+$/, '') : '';
+
+export const API_BASE = configuredApiBase || (import.meta.env.DEV ? 'http://localhost:5000' : browserOrigin);
 export const API = `${API_BASE}/api`;
+
+if (import.meta.env.PROD && !configuredApiBase) {
+  console.warn('[API] VITE_API_URL is not set. Falling back to the current origin.');
+}
 
 export const metrics = [
   { icon: TrendingUp, value: '8', label: 'High-growth paths' },

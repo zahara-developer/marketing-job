@@ -23,11 +23,30 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const app = express();
 const port = Number(process.env.PORT) || 5000;
-const allowedOrigins = [
+const configuredOrigins = [
   process.env.CLIENT_URL,
-  'http://localhost:5173',
-  'http://localhost:5174'
-].filter(Boolean);
+  process.env.VERCEL_FRONTEND_URL,
+  process.env.FRONTEND_URL,
+  ...(process.env.ALLOWED_ORIGINS || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean)
+].map((origin) => origin.replace(/\/+$/, ''));
+
+const vercelPreviewOrigin = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL.replace(/\/+$/, '')}`
+  : '';
+
+const allowedOrigins = Array.from(
+  new Set(
+    [
+      ...configuredOrigins,
+      vercelPreviewOrigin,
+      'http://localhost:5173',
+      'http://localhost:5174'
+    ].filter(Boolean)
+  )
+);
 
 app.use(cors({
   origin(origin, callback) {
