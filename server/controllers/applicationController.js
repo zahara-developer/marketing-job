@@ -117,7 +117,7 @@ export const createApplication = async (req, res) => {
     });
 
     try {
-      await sendApplicationEmail(application);
+      // await sendApplicationEmail(application);
     } catch (err) {
       console.error('Email sending failed:', err);
     }
