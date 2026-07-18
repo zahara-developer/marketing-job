@@ -12,12 +12,6 @@ const transporter = nodemailer.createTransport({
 
 export const sendApplicationEmail = async (application) => {
     try {
-        console.log("Checking Gmail connection...");
-
-        await transporter.verify();
-
-        console.log("✅ Gmail Connected");
-
         const info = await transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: process.env.EMAIL_USER,
