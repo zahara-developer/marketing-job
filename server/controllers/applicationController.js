@@ -117,16 +117,16 @@ export const createApplication = async (req, res) => {
     });
 
     try {
-      // await sendApplicationEmail(application);
+      console.log("📩 Starting email...");
+
+      await sendApplicationEmail(application);
+
+      console.log("✅ Email function completed");
     } catch (err) {
-      console.error('Email sending failed:', err);
+      console.error("❌ Email sending failed:", err);
     }
 
     return res.status(201).json({
-      message: 'Application submitted successfully.',
+      message: "Application submitted successfully.",
       application
     });
-  } catch (error) {
-    return res.status(500).json({ message: 'Failed to submit application.' });
-  }
-};
