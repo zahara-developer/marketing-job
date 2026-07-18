@@ -34,8 +34,8 @@ export const sendApplicationEmail = async (application) => {
         console.log("✅ Email Sent Successfully");
         console.log(info);
 
-    } catch (error) {
+    } catch (err) {
         console.error("EMAIL ERROR:");
-        console.error(error);
+        console.error(err);
     }
 };

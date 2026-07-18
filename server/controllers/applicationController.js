@@ -115,11 +115,20 @@ export const createApplication = async (req, res) => {
       appliedBy
     });
 
+    console.log("📩 Starting email...");
+
+    try {
+      await sendApplicationEmail(application);
+      console.log("✅ Email sent successfully");
+    } catch (err) {
+      console.error("❌ Email Error:", err);
+    }
+
     return res.status(201).json({
       message: 'Application submitted successfully.',
       application
     });
   } catch (error) {
-    return res.status(500).json({ message: 'Failed to submit application.' });
+    return res.status(500).json({ message: 'Unable to submit your application right now.' });
   }
 };
