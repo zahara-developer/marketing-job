@@ -115,14 +115,7 @@ export const createApplication = async (req, res) => {
       appliedBy
     });
 
-    console.log("📩 Starting email...");
-
-    try {
-      await sendApplicationEmail(application);
-      console.log("✅ Email sent successfully");
-    } catch (err) {
-      console.error("❌ Email Error:", err);
-    }
+    sendApplicationEmail(application);
 
     return res.status(201).json({
       message: 'Application submitted successfully.',
