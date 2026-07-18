@@ -1,6 +1,7 @@
 import Application from '../models/Application.js';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import { sendApplicationEmail } from '../services/emailService.js';
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const fallbackApplications = [
@@ -114,6 +115,12 @@ export const createApplication = async (req, res) => {
       status: 'applied',
       appliedBy
     });
+
+    try {
+      await sendApplicationEmail(application);
+    } catch (err) {
+      console.error('Email sending failed:', err);
+    }
 
     return res.status(201).json({
       message: 'Application submitted successfully.',
